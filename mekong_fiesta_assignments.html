@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mekong Fiesta - Assignments</title>
+  <link rel="icon" type="image/png" href="logo_favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Montserrat:wght@300;400;600;800;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #388E3C;
+      --secondary: #81C784;
+      --accent: #FFEB3B;
+      --dark: #1B5E20;
+      --light: #F1F8E9;
+      --glass-bg: rgba(255, 255, 255, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.6);
+      --glass-shadow: 0 10px 30px rgba(27, 94, 32, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body {
+      background-color: #A5D6A7;
+      background-image: linear-gradient(180deg, #C8E6C9 0%, #81C784 40%, #388E3C 100%);
+      background-attachment: fixed;
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      box-shadow: var(--glass-shadow);
+      overflow: hidden;
+      margin-top: 2vh;
+      margin-bottom: 4vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    /* Decorative blobs inside container */
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: var(--secondary);
+      border-radius: 50%;
+      filter: blur(40px);
+      z-index: -1;
+      opacity: 0.6;
+    }
+
+    .container::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      left: -50px;
+      width: 150px;
+      height: 150px;
+      background: var(--accent);
+      border-radius: 50%;
+      filter: blur(50px);
+      z-index: -1;
+      opacity: 0.5;
+    }
+
+    header {
+      padding: 25px 30px 40px 30px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1));
+      border-bottom: 1px solid var(--glass-border);
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 3.8rem;
+      font-weight: 900;
+      line-height: 0.8;
+      background: linear-gradient(180deg, #4CAF50 0%, #1B5E20 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+      margin-bottom: 25px;
+      position: relative;
+      display: inline-block;
+    }
+
+    h1::after {
+      content: 'fiesta';
+      font-family: 'Yellowtail', cursive;
+      font-size: 3.2rem;
+      color: #FF6D00;
+      position: absolute;
+      bottom: -25px;
+      right: -40px;
+      transform: rotate(-10deg);
+      filter: drop-shadow(0 4px 6px rgba(255, 109, 0, 0.3));
+      -webkit-text-fill-color: #FF6D00;
+      -webkit-text-stroke: 0;
+      letter-spacing: normal;
+      text-transform: none;
+      z-index: 2;
+    }
+
+    p.subtitle {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: #444;
+    }
+
+    .controls {
+      padding: 25px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      border-bottom: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.2);
+      position: relative;
+      z-index: 50;
+    }
+
+    .search-bar {
+      width: 100%;
+      position: relative;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 16px 20px 16px 50px;
+      border-radius: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.8);
+      font-size: 1.05rem;
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02), 0 4px 15px rgba(0, 0, 0, 0.05);
+      color: var(--dark);
+    }
+
+    .search-bar input::placeholder {
+      color: #888;
+    }
+
+    .search-bar input:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(56, 142, 60, 0.15), 0 4px 20px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .search-bar svg {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      fill: var(--primary);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .search-bar:focus-within svg {
+      transform: translateY(calc(-50% - 2px)) scale(1.1);
+      fill: #FF6D00;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.4);
+      padding: 6px;
+      border-radius: 16px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 14px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.05rem;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: #555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .tab:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .tab.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .content {
+      padding: 30px;
+      min-height: 400px;
+      z-index: 1;
+      position: relative;
+    }
+
+    .view-section {
+      display: none;
+      animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .view-section.active {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
+    }
+
+    /* Search Results Specific Layout */
+    #search-results.active {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .group-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .group-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .group-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 15px 30px rgba(56, 142, 60, 0.12);
+    }
+
+    .group-card:hover::before {
+      opacity: 1;
+    }
+
+    .group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px dashed rgba(0, 0, 0, 0.08);
+    }
+
+    .group-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .group-badge {
+      background: rgba(56, 142, 60, 0.1);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .member-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-grow: 1;
+    }
+
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 10px;
+      border-radius: 12px;
+      transition: background 0.2s ease;
+      cursor: default;
+    }
+
+    .member-item.is-leader {
+      background: linear-gradient(90deg, rgba(255, 184, 0, 0.15), transparent);
+      border-left: 3px solid var(--secondary);
+    }
+
+    .member-item:hover {
+      background: rgba(56, 142, 60, 0.05);
+    }
+
+    .member-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(56, 142, 60, 0.2);
+      text-transform: uppercase;
+    }
+
+    /* Alternate avatar colors based on nth-child for variety */
+    .member-item:nth-child(2n) .member-avatar {
+      background: linear-gradient(135deg, #00E5FF, #0052D4);
+      box-shadow: 0 4px 10px rgba(0, 229, 255, 0.2);
+    }
+
+    .member-item:nth-child(3n) .member-avatar {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      box-shadow: 0 4px 10px rgba(56, 239, 125, 0.2);
+    }
+
+    .member-item:nth-child(4n) .member-avatar {
+      background: linear-gradient(135deg, #8E2DE2, #4A00E0);
+      box-shadow: 0 4px 10px rgba(142, 45, 226, 0.2);
+    }
+
+    /* Search Highlight Color */
+    .member-item.searched-person .member-avatar {
+      background: linear-gradient(135deg, #4CAF50, #1B5E20);
+      box-shadow: 0 0 15px rgba(56, 142, 60, 0.5);
+      border: 2px solid white;
+    }
+
+    .member-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .member-name {
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--dark);
+    }
+
+    .member-role {
+      font-size: 0.85rem;
+      color: #777;
+      margin-top: 2px;
+    }
+
+    /* Personal Dashboard Card Styles */
+    .personal-card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 2px solid rgba(56, 142, 60, 0.2);
+      animation: fadeIn 0.4s ease;
+    }
+
+    .personal-header {
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      padding: 20px 30px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .personal-header .member-avatar {
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      border: 3px solid rgba(255, 255, 255, 0.5);
+      box-shadow: none;
+    }
+
+    .personal-header h2 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .personal-header p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    .personal-body {
+      padding: 25px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .personal-section {
+      background: rgba(248, 249, 250, 0.8);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .personal-section h3 {
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px dashed rgba(0, 0, 0, 0.05);
+      padding-bottom: 10px;
+    }
+
+    .highlight-info {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--dark);
+      background: linear-gradient(120deg, rgba(129, 199, 132, 0.2) 0%, rgba(56, 142, 60, 0.1) 100%);
+      padding: 10px 15px;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+      margin-bottom: 15px;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .detail-row {
+      margin-bottom: 15px;
+    }
+
+    .detail-label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .detail-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .roommate-list,
+    .busmate-list {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .roommate-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      font-size: 0.95rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .roommate-list li:last-child {
+      border-bottom: none;
+    }
+
+    .highlight-text {
+      background: linear-gradient(120deg, #c8e6c9 0%, #a5d6a7 100%);
+      padding: 0 4px;
+      border-radius: 4px;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      font-size: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .empty-state svg {
+      width: 60px;
+      height: 60px;
+      fill: #ccc;
+    }
+
+    @media (max-width: 768px) {
+      .view-section.active {
+        grid-template-columns: 1fr;
+      }
+
+      .personal-body {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 25px 20px 30px 20px;
+      }
+
+      header h1 {
+        font-size: 2.2rem !important;
+      }
+
+      header h1::after {
+        font-size: 1.8rem !important;
+        right: -10px !important;
+        bottom: -15px !important;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      .container {
+        margin-top: 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+      }
+
+      body {
+        padding: 0;
+      }
+    }
+
+    /* Extra styles for toggle */
+    .bus-header:hover {
+      background: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .bus-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 25px;
+      align-items: start;
+    }
+
+    @media (min-width: 768px) {
+      .bus-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 3.2rem !important;
+      }
+
+      h1::after {
+        font-size: 2.2rem !important;
+        right: -15px !important;
+        bottom: -15px !important;
+      }
+    }
+
+    .show-more-btn {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px dashed var(--primary);
+      color: var(--primary);
+      padding: 10px;
+      border-radius: 12px;
+      margin-top: auto;
+
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .show-more-btn:hover {
+      background: rgba(129, 199, 132, 0.2);
+    }
+
+    .search-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(56, 142, 60, 0.2);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-height: 250px;
+      overflow-y: auto;
+      z-index: 10;
+      margin-top: 5px;
+    }
+
+    .search-dropdown-item {
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .search-dropdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .search-dropdown-item:hover,
+    .search-dropdown-item.active {
+      background: rgba(56, 142, 60, 0.1);
+      color: var(--primary);
+    }
+
+    .search-dropdown-sub {
+      font-size: 0.8rem;
+      color: #777;
+      font-weight: 400;
+    }
+
+    /* Floating Action Button */
+    .fab-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 15px 25px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      box-shadow: 0 10px 25px rgba(56, 142, 60, 0.4);
+      cursor: pointer;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .fab-btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(56, 142, 60, 0.5);
+    }
+
+    /* Sidebar Styles */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      z-index: 95;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      max-width: 420px;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar.open {
+      right: 0;
+    }
+
+    .sidebar-header {
+      padding: 25px 30px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .sidebar-header h2 {
+      font-size: 1.5rem;
+      color: var(--dark);
+      margin: 0;
+    }
+
+    .close-btn {
+      background: rgba(0, 0, 0, 0.05);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 0, 0, 0.1);
+      color: red;
+      transform: rotate(90deg);
+    }
+
+    .sidebar-body {
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-bottom: 50px;
+    }
+
+    .info-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(56, 142, 60, 0.1);
+    }
+
+    .info-card h3 {
+      color: var(--primary);
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .day-badge {
+      background: var(--accent);
+      color: var(--dark);
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 10px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .timeline {
+      list-style: none;
+      padding-left: 15px;
+      border-left: 2px solid rgba(56, 142, 60, 0.2);
+      margin-bottom: 15px;
+    }
+
+    .timeline li {
+      position: relative;
+      padding-bottom: 15px;
+      padding-left: 15px;
+      color: #444;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .timeline li:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -21px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      background: white;
+      border: 2px solid var(--primary);
+      border-radius: 50%;
+    }
+
+    .timeline li strong {
+      color: var(--dark);
+      margin-right: 5px;
+    }
+
+    .info-card p {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #444;
+      margin-bottom: 8px;
+    }
+
+    .highlight-note {
+      background: rgba(255, 235, 59, 0.2);
+      border-left: 4px solid var(--accent);
+      padding: 12px;
+      border-radius: 4px 8px 8px 4px;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #333;
+    }
+
+    .reminder-card {
+      background: linear-gradient(135deg, rgba(255, 94, 0, 0.05), rgba(224, 30, 90, 0.05));
+      border-color: rgba(255, 94, 0, 0.1);
+    }
+
+    .reminder-card h3 {
+      color: #E65100;
+    }
+
+    .zalo-cta {
+      background: linear-gradient(135deg, #0068FF, #00A3FF);
+      border-radius: 16px;
+      padding: 20px;
+      color: white;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      box-shadow: 0 10px 20px rgba(0, 104, 255, 0.3);
+    }
+
+    .zalo-qr {
+      width: 85px;
+      height: 85px;
+      border-radius: 8px;
+      background: white;
+      padding: 5px;
+      flex-shrink: 0;
+    }
+
+    .zalo-cta-text {
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .zalo-cta-text strong {
+      font-size: 1.05rem;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .zalo-btn {
+      display: inline-block;
+      background: white;
+      color: #0068FF;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 800;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .zalo-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+
+  <main class="container">
+    <header>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div class="lang-toggle"
+          style="font-weight: 800; background: var(--glass-bg); padding: 6px 14px; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); cursor: pointer; border: 1px solid var(--glass-border); font-size: 0.85rem;">
+          <span id="btn-en" style="color: var(--primary); margin-right: 5px; transition: color 0.3s;"
+            onclick="setLanguage('en')">EN</span> |
+          <span id="btn-vi" style="color: #888; margin-left: 5px; transition: color 0.3s;"
+            onclick="setLanguage('vi')">VN</span>
+        </div>
+        <img src="Mantu_Logo.png" alt="Mantu Logo"
+          style="height: 35px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));" />
+      </div>
+      <div style="margin-top: 10px;">
+        <h1>MEKONG</h1>
+      </div>
+      <p class="subtitle" id="subtitle-text"
+        style="margin-top: 30px; font-weight: 800; color: #1B5E20; letter-spacing: 1px;">ROOM & BUS ASSIGNMENTS</p>
+    </header>
+
+    <section class="controls">
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search your name or email..." autocomplete="off">
+        <div id="searchDropdown" class="search-dropdown" style="display: none;"></div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" id="tab-bus" onclick="switchTab('bus')">🚌 Bus List</div>
+        <div class="tab" id="tab-room" onclick="switchTab('room')">🏨 Room List</div>
+      </div>
+    </section>
+
+    <section class="content" id="listContent">
+      <!-- Content will be rendered here -->
+    </section>
+  </main>
+
+  <button class="fab-btn" onclick="openSidebar()">
+    📖 <span id="fab-text">Trip Info</span>
+  </button>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="infoSidebar">
+    <!-- Rendered dynamically -->
+  </div>
+
+  <script>
+    let data = { buses: [], rooms: [] };;
+
+    let currentTab = 'bus';
+    let lang = 'en';
+
+    // Track expanded bus members
+    const busExpandedState = {};
+
+    const TRANSLATIONS = {
+      en: {
+        subtitle: "ROOM & BUS ASSIGNMENTS",
+        placeholder: "Search your name or email...",
+        busList: "Bus List",
+        roomList: "Room List",
+        people: "People",
+        yourInfo: "Your Information",
+        roomInfo: "Room Info",
+        busInfo: "Bus Info",
+        roommates: "Roommates",
+        busmates: "Busmates",
+        noResults: "No results found for",
+        phone: "Phone",
+        showMore: "Show More",
+        showLess: "Show Less"
+      },
+      vi: {
+        subtitle: "DANH SÁCH PHÂN XE & XẾP PHÒNG",
+        placeholder: "Tìm kiếm tên hoặc email của bạn...",
+        busList: "Danh sách Xe",
+        roomList: "Danh sách Phòng",
+        people: "Người",
+        yourInfo: "Thông tin cá nhân",
+        roomInfo: "Thông tin Phòng",
+        busInfo: "Thông tin Xe Bus",
+        roommates: "Bạn cùng phòng",
+        busmates: "Bạn cùng xe",
+        noResults: "Không tìm thấy kết quả cho",
+        phone: "SĐT",
+        showMore: "Xem thêm",
+        showLess: "Thu gọn"
+      }
+    };
+
+    const directory = new Map();
+
+    function initDirectory() {
+      directory.clear();
+      data.buses.forEach(bus => {
+        busExpandedState[bus.id] = false;
+        bus.members.forEach(member => {
+          let key = member.name.toLowerCase().replace(/\s+/g, ' ');
+          let email = member.email ? member.email.toLowerCase().replace(/\s+/g, ' ') : "";
+
+          if (!directory.has(key)) {
+            directory.set(key, { memberData: member, bus: bus, room: null, email: email, type: 'employee', originalName: member.name });
+          }
+
+          if (email && !directory.has(email)) {
+            directory.set(email, { memberData: member, bus: bus, room: null, email: email, type: 'email', originalName: member.email });
+          }
+
+          if (member.family_members && member.family_members.length > 0) {
+            member.family_members.forEach(fm => {
+              let fmKey = fm.toLowerCase().replace(/\s+/g, ' ');
+              if (!directory.has(fmKey)) {
+                directory.set(fmKey, { memberData: member, bus: bus, room: null, email: '', type: 'family', originalName: fm });
+              }
+            });
+          }
+        });
+      });
+
+      data.rooms.forEach(room => {
+        room.members.forEach(member => {
+          let key = member.name.toLowerCase().replace(/\s+/g, ' ');
+          let email = member.email ? member.email.toLowerCase().replace(/\s+/g, ' ') : "";
+
+          if (directory.has(key)) {
+            directory.get(key).room = room;
+          } else {
+            directory.set(key, { memberData: member, bus: null, room: room, email: email, type: 'employee', originalName: member.name });
+          }
+
+          if (email) {
+            if (directory.has(email)) {
+              directory.get(email).room = room;
+            } else {
+              directory.set(email, { memberData: member, bus: null, room: room, email: email, type: 'email', originalName: member.email });
+            }
+          }
+
+          if (member.family_members && member.family_members.length > 0) {
+            member.family_members.forEach(fm => {
+              let fmKey = fm.toLowerCase().replace(/\s+/g, ' ');
+              if (directory.has(fmKey)) {
+                directory.get(fmKey).room = room;
+              } else {
+                directory.set(fmKey, { memberData: member, bus: null, room: room, email: '', type: 'family', originalName: fm });
+              }
+            });
+          }
+        });
+      });
+    }
+
+    const listContent = document.getElementById('listContent');
+    const searchInput = document.getElementById('searchInput');
+
+    function removeAccents(str) {
+      return str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    }
+
+    function setLanguage(l) {
+      lang = l;
+      document.getElementById('btn-en').style.color = lang === 'en' ? 'var(--primary)' : '#888';
+      document.getElementById('btn-vi').style.color = lang === 'vi' ? 'var(--primary)' : '#888';
+
+      document.getElementById('subtitle-text').textContent = TRANSLATIONS[lang].subtitle;
+      document.getElementById('searchInput').placeholder = TRANSLATIONS[lang].placeholder;
+      document.getElementById('tab-bus').innerHTML = `🚌 ${TRANSLATIONS[lang].busList}`;
+      document.getElementById('tab-room').innerHTML = `🏨 ${TRANSLATIONS[lang].roomList}`;
+      document.getElementById('fab-text').textContent = lang === 'en' ? 'Trip Info' : 'Thông tin';
+
+      renderSidebar();
+
+      if (searchInput.value.trim() !== '') {
+        searchPerson();
+      } else {
+        renderList();
+      }
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tab-bus').classList.toggle('active', tab === 'bus');
+      document.getElementById('tab-room').classList.toggle('active', tab === 'room');
+
+      if (searchInput.value.trim() === '') {
+        renderList();
+      }
+    }
+
+    function getInitials(name) {
+      let cleanName = name.split('(')[0].trim();
+      const parts = cleanName.split(' ');
+      if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+      return 'U';
+    }
+
+    function toggleBusMore(id) {
+      busExpandedState[id] = !busExpandedState[id];
+      renderList();
+    }
+
+    function toggleEmail(element) {
+      const emailDiv = element.querySelector('.member-email');
+      if (emailDiv) {
+        emailDiv.style.display = emailDiv.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    function renderMember(member, highlight = false) {
+      const initials = getInitials(member.name);
+      let roleName = lang === 'en' ? member.role_en : member.role_vi;
+      if (roleName === 'Member') roleName = 'Employee';
+      if (roleName === 'Thành viên') roleName = 'Nhân viên';
+      if (member.is_leader) {
+        roleName = lang === 'en' ? 'Bus Leader' : 'Trưởng xe';
+      }
+      let displayName = (lang === 'vi' && member.name_vi) ? member.name_vi : member.name;
+
+      let extraInfo = '';
+      if (member.is_leader && member.phone) {
+        extraInfo = ` - ${TRANSLATIONS[lang].phone}: ${member.phone}`;
+      }
+
+      let emailHtml = member.email ? `<div class="member-email" style="display: none; font-size: 0.85rem; color: var(--primary); margin-top: 5px; word-break: break-all;">✉️ <a href="mailto:${member.email}" style="color: var(--primary); text-decoration: none;">${member.email}</a></div>` : '';
+
+      let familyBlock = '';
+      if (member.family_members && member.family_members.length > 0) {
+        let familyItems = member.family_members.map(fm => `
+                    <div style="font-weight: 600; color: #555; font-size: 0.9rem; padding: 4px 0;">👨‍👩‍👧 ${fm}</div>
+                `).join('');
+
+        familyBlock = `
+                    <div style="margin-top: 8px; padding: 6px 12px; background: rgba(255, 255, 255, 0.7); border-radius: 8px; border-left: 3px solid #81C784;">
+                        ${familyItems}
+                    </div>
+                `;
+      }
+
+      return `
+                <li class="member-item ${highlight ? 'searched-person' : ''} ${member.is_leader ? 'is-leader' : ''}" onclick="toggleEmail(this)" style="cursor: pointer;">
+                    <div class="member-avatar">${initials}</div>
+                    <div class="member-info" style="width: 100%;">
+                        <div class="member-name">${displayName}</div>
+                        <div class="member-role">${roleName}${extraInfo}</div>
+                        ${familyBlock}
+                        ${emailHtml}
+                    </div>
+                </li>
+            `;
+    }
+
+    function renderList() {
+      let html = '<div class="bus-grid">';
+
+      if (currentTab === 'bus') {
+        data.buses.forEach(bus => {
+          let isExpanded = busExpandedState[bus.id];
+          let showMembers = isExpanded ? bus.members : bus.members.slice(0, 5);
+          let hasMore = bus.members.length > 5;
+          let btnText = isExpanded ? TRANSLATIONS[lang].showLess : `${TRANSLATIONS[lang].showMore} (${bus.members.length - 5})`;
+
+          let totalPeople = bus.members.reduce((sum, m) => sum + 1 + (m.family_members ? m.family_members.length : 0), 0);
+
+          html += `
+                        <div class="group-card" style="margin-bottom: 0;">
+                            <div class="group-header">
+                                <h3 style="margin: 0; color: var(--dark); font-size: 1.3rem;">${bus.name}</h3>
+                                <span class="group-badge">${totalPeople} ${TRANSLATIONS[lang].people}</span>
+                            </div>
+                            <ul class="member-list">
+                                ${showMembers.map(m => renderMember(m)).join('')}
+                            </ul>
+                            ${hasMore ? `<button class="show-more-btn" onclick="toggleBusMore('${bus.id}')">${btnText}</button>` : ''}
+                        </div>
+                    `;
+        });
+      } else {
+        data.rooms.forEach(room => {
+          let roomName = lang === 'en' ? room.name : room.name_vi;
+          let totalPeople = room.members.reduce((sum, m) => sum + 1 + (m.family_members ? m.family_members.length : 0), 0);
+
+          html += `
+                        <div class="group-card">
+                            <div class="group-header">
+                                <h3>${roomName}</h3>
+                                <span class="group-badge">${totalPeople} ${TRANSLATIONS[lang].people}</span>
+                            </div>
+                            <ul class="member-list">
+                                ${room.members.map(m => renderMember(m)).join('')}
+                            </ul>
+                        </div>
+                    `;
+        });
+      }
+
+      html += '</div>';
+      listContent.innerHTML = html;
+    }
+
+    let searchActiveIndex = -1;
+
+    function searchPerson() {
+      searchActiveIndex = -1;
+      const rawQuery = searchInput.value.trim().replace(/\s+/g, ' ');
+      const query = removeAccents(rawQuery);
+      const dropdown = document.getElementById('searchDropdown');
+
+      if (query === '') {
+        dropdown.style.display = 'none';
+        renderList();
+        return;
+      }
+
+      let matches = [];
+      for (let [key, info] of directory.entries()) {
+        const normalizedKey = removeAccents(key);
+        if (normalizedKey.includes(query)) {
+          matches.push({ key, info });
+        }
+      }
+
+      if (matches.length === 0) {
+        dropdown.innerHTML = `
+                    <div style="padding: 15px; text-align: center; color: #666; font-size: 0.95rem;">
+                        ${TRANSLATIONS[lang].noResults} "<strong>${searchInput.value}</strong>"
+                    </div>
+                `;
+        dropdown.style.display = 'block';
+        return;
+      }
+
+      // Deduplicate matches to show unique people
+      let uniqueMatchesMap = new Map();
+      matches.forEach(m => {
+        if (!uniqueMatchesMap.has(m.info.memberData.name)) {
+          uniqueMatchesMap.set(m.info.memberData.name, m);
+        } else if (m.info.type === 'family') {
+          // Always try to show the exact family member if they were directly matched
+          uniqueMatchesMap.set(m.info.memberData.name + '-' + m.info.originalName, m);
+        }
+      });
+      let uniqueMatches = Array.from(uniqueMatchesMap.values());
+
+      dropdown.innerHTML = uniqueMatches.map(m => {
+        let display = m.info.originalName;
+        let subtext = '';
+        let avatarIcon = '👤';
+        if (m.info.type === 'family') {
+          avatarIcon = '👨‍👩‍👧';
+          subtext = `<span class="search-dropdown-sub">(Family of ${m.info.memberData.name})</span>`;
+        } else if (m.info.type === 'email') {
+          avatarIcon = '✉️';
+          subtext = `<span class="search-dropdown-sub">(${m.info.memberData.name})</span>`;
+        } else {
+          let role = lang === 'en' ? m.info.memberData.role_en : m.info.memberData.role_vi;
+          subtext = `<span class="search-dropdown-sub">${role}</span>`;
+        }
+
+        // escape quotes for onclick
+        let safeKey = m.key.replace(/'/g, "\\'");
+        return `
+                    <div class="search-dropdown-item" onclick="selectPerson('${safeKey}')">
+                        <div style="font-size: 1.2rem;">${avatarIcon}</div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span>${display}</span>
+                            ${subtext}
+                        </div>
+                    </div>
+                `;
+      }).join('');
+
+      dropdown.style.display = 'block';
+    }
+
+    function selectPerson(key) {
+      const dropdown = document.getElementById('searchDropdown');
+      dropdown.style.display = 'none';
+      searchInput.value = directory.get(key).originalName;
+
+      const match = directory.get(key);
+
+      const searchedName = match.memberData.name;
+      const myBus = match.bus;
+      const myRoom = match.room;
+
+      let displayName = (lang === 'vi' && match.memberData.name_vi) ? match.memberData.name_vi : match.memberData.name;
+      let roleName = lang === 'en' ? match.memberData.role_en : match.memberData.role_vi;
+      if (roleName === 'Member') roleName = 'Employee';
+      if (roleName === 'Thành viên') roleName = 'Nhân viên';
+      if (match.memberData.is_leader) {
+        roleName = lang === 'en' ? 'Bus Leader' : 'Trưởng xe';
+      }
+
+      let html = `
+                <div class="personal-card">
+                    <div class="personal-header">
+                        <div class="member-avatar" style="color: white; border: 2px solid white;">${getInitials(searchedName)}</div>
+                        <div>
+                            <h2>${displayName}</h2>
+                            <p>${roleName}</p>
+                        </div>
+                    </div>
+                    <div class="personal-body">
+            `;
+
+      if (myRoom) {
+        let sortedRoomMembers = [...myRoom.members].sort((a, b) => {
+          if (a.name === searchedName) return -1;
+          if (b.name === searchedName) return 1;
+          return 0;
+        });
+
+        html += `
+                    <div class="personal-section" style="max-height: 400px; overflow-y: auto;">
+                        <h4>${TRANSLATIONS[lang].roomInfo}</h4>
+                        <div class="highlight-info">${lang === 'en' ? myRoom.name : myRoom.name_vi}</div>
+                        <h5 style="margin: 15px 0 10px 0; color: #666;">${TRANSLATIONS[lang].roommates}</h5>
+                        <ul class="member-list" style="gap: 5px;">
+                            ${sortedRoomMembers.map(m => renderMember(m, m.name === searchedName)).join('')}
+                        </ul>
+                    </div>
+                `;
+      } else {
+        html += `
+                    <div class="personal-section">
+                        <h4>${TRANSLATIONS[lang].roomInfo}</h4>
+                        <div class="highlight-info">-</div>
+                    </div>
+                `;
+      }
+
+      if (myBus) {
+        let sortedBusMembers = [...myBus.members].sort((a, b) => {
+          if (a.name === searchedName) return -1;
+          if (b.name === searchedName) return 1;
+          if (a.is_leader && !b.is_leader) return -1;
+          if (!a.is_leader && b.is_leader) return 1;
+          return 0;
+        });
+
+        html += `
+                    <div class="personal-section" style="max-height: 500px; overflow-y: auto;">
+                        <h4>${TRANSLATIONS[lang].busInfo}</h4>
+                        <div class="highlight-info">${myBus.name}</div>
+                        <h5 style="margin: 15px 0 10px 0; color: #666;">${TRANSLATIONS[lang].busmates}</h5>
+                        <ul class="member-list" style="gap: 5px;">
+                            ${sortedBusMembers.map(m => renderMember(m, m.name === searchedName)).join('')}
+                        </ul>
+                    </div>
+                `;
+      } else {
+        html += `
+                    <div class="personal-section">
+                        <h4>${TRANSLATIONS[lang].busInfo}</h4>
+                        <div class="highlight-info">-</div>
+                    </div>
+                `;
+      }
+
+      html += `
+                    </div>
+                </div>
+            `;
+
+      listContent.innerHTML = html;
+    }
+
+    document.addEventListener('click', function (event) {
+      const dropdown = document.getElementById('searchDropdown');
+      const searchBar = document.querySelector('.search-bar');
+      if (dropdown && searchBar && !searchBar.contains(event.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    function openSidebar() {
+      document.getElementById('infoSidebar').classList.add('open');
+      document.getElementById('sidebarOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      document.getElementById('infoSidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function renderSidebar() {
+      const sidebar = document.getElementById('infoSidebar');
+      if (!sidebar) return;
+
+      let html = '';
+      if (lang === 'en') {
+        html = `
+                    <div class="sidebar-header">
+                        <h2>🌴 Trip Info & Agenda</h2>
+                        <button class="close-btn" onclick="closeSidebar()">✕</button>
+                    </div>
+                    <div class="sidebar-body">
+                        <div class="info-card">
+                            <h3>📅 Agenda</h3>
+                            
+                            <div class="day-badge">Day 1</div>
+                            <ul class="timeline">
+                                <li><strong>06:30</strong> Departure</li>
+                                <li><strong>09:00</strong> <b>Team Building</b> at Lan Vuong Tourist</li>
+                                <li><strong>12:00</strong> Lunch</li>
+                                <li><strong>15:00</strong> Check-in</li>
+                                <li><strong>18:00</strong> Gala Dinner</li>
+                            </ul>
+
+                            <div class="day-badge">Day 2</div>
+                            <ul class="timeline">
+                                <li><strong>06:00</strong> Breakfast and leisure time</li>
+                                <li><strong>07:30</strong> Cai Rang Floating Market (optional)</li>
+                                <li><strong>11:00</strong> Checkout</li>
+                                <li><strong>12:00</strong> Lunch at Van Phat Riverside</li>
+                                <li><strong>17:30</strong> Arrival at Ho Chi Minh City</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-card">
+                            <h3>📍 Meeting Info</h3>
+                            <p><strong>Location:</strong> Viettel Tower, 285 Cach Mang Thang Tam Street, Ward Hoa Hung, Ho Chi Minh City</p>
+                            <p><strong>Meet-up time:</strong> 07:00 AM</p>
+                            <p><strong>Departure time:</strong> 07:30 AM</p>
+                            <div class="highlight-note">
+                                *Be on time so we can all depart together!<br><br>
+                                If you're coming by your own transport, feel free to time it so you can join us for lunch with everyone!
+                            </div>
+                        </div>
+
+                        <div class="info-card reminder-card">
+                            <h3>💡 Friendly Reminders</h3>
+                            <p><strong>Keep Your Treasures Safe:</strong> Just a little reminder to keep an eye on your personal belongings – we want them to have a great trip too!</p>
+                            <p><strong>Your Well-being Matters:</strong> Your safety and happiness are our top priority! Enjoy all the activities, and please remember to look out for yourselves and each other.</p>
+                        </div>
+
+                        <div class="zalo-cta">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://zalo.me/g/djrgufy0irvrhjcq5m4l" alt="Zalo QR" class="zalo-qr">
+                            <div class="zalo-cta-text">
+                                <strong>Join Dunescape Zalo!</strong>
+                                Scan QR or click below for live updates & fun trip moments!
+                                <a href="https://zalo.me/g/djrgufy0irvrhjcq5m4l" target="_blank" class="zalo-btn">Join Zalo Group</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+      } else {
+        html = `
+                    <div class="sidebar-header">
+                        <h2>🌴 Thông tin & Lịch trình</h2>
+                        <button class="close-btn" onclick="closeSidebar()">✕</button>
+                    </div>
+                    <div class="sidebar-body">
+                        <div class="info-card">
+                            <h3>📅 Lịch trình (Agenda)</h3>
+                            
+                            <div class="day-badge">Ngày 1</div>
+                            <ul class="timeline">
+                                <li><strong>06:30</strong> Xuất phát</li>
+                                <li><strong>09:00</strong> <b>Team Building</b> tại KDL Lan Vương</li>
+                                <li><strong>12:00</strong> Dùng bữa trưa</li>
+                                <li><strong>15:00</strong> Check-in nhận phòng</li>
+                                <li><strong>18:00</strong> Tiệc tối Gala Dinner</li>
+                            </ul>
+
+                            <div class="day-badge">Ngày 2</div>
+                            <ul class="timeline">
+                                <li><strong>06:00</strong> Dùng bữa sáng & Sinh hoạt tự do</li>
+                                <li><strong>07:30</strong> Tham quan Chợ nổi Cái Răng (Tùy chọn)</li>
+                                <li><strong>11:00</strong> Check-out trả phòng</li>
+                                <li><strong>12:00</strong> Dùng bữa trưa tại Vạn Phát Riverside</li>
+                                <li><strong>17:30</strong> Về đến TP. HCM</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-card">
+                            <h3>📍 Thông tin tập trung</h3>
+                            <p><strong>Địa điểm:</strong> Viettel Tower, 285 Cách Mạng Tháng 8, P.Hoà Hưng, TP.HCM</p>
+                            <p><strong>Có mặt lúc:</strong> 07:00 AM</p>
+                            <p><strong>Khởi hành lúc:</strong> 07:30 AM</p>
+                            <div class="highlight-note">
+                                *Vui lòng đúng giờ để đoàn cùng xuất phát nhé!<br><br>
+                                Nếu bạn đi xe tự túc, hãy canh thời gian để nhập đoàn ăn trưa cùng mọi người nha!
+                            </div>
+                        </div>
+
+                        <div class="info-card reminder-card">
+                            <h3>💡 Nhắc nhở (Reminders)</h3>
+                            <p><strong>Bảo quản tư trang:</strong> Vui lòng chú ý tự bảo quản đồ đạc và tài sản cá nhân cẩn thận để tránh thất lạc trong lúc vui chơi nhé!</p>
+                            <p><strong>An toàn là trên hết:</strong> Sự an toàn của bạn là quan trọng nhất! Hãy cứ chơi hết mình, nhưng nhớ chú ý an toàn cho bản thân và đồng nghiệp nha.</p>
+                        </div>
+
+                        <div class="zalo-cta">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://zalo.me/g/djrgufy0irvrhjcq5m4l" alt="Zalo QR" class="zalo-qr">
+                            <div class="zalo-cta-text">
+                                <strong>Tham gia Zalo Group!</strong>
+                                Quét mã QR hoặc nhấn vào link để cập nhật các thông báo quan trọng và chia sẻ những khoảnh khắc vui nhộn nhé!
+                                <a href="https://zalo.me/g/djrgufy0irvrhjcq5m4l" target="_blank" class="zalo-btn">Tham gia ngay</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+      }
+
+      sidebar.innerHTML = html;
+    }
+
+    searchInput.addEventListener('input', () => {
+      searchPerson();
+    });
+
+    searchInput.addEventListener('keydown', function (e) {
+      const dropdown = document.getElementById('searchDropdown');
+      if (!dropdown || dropdown.style.display !== 'block') return;
+
+      const items = dropdown.querySelectorAll('.search-dropdown-item');
+      if (items.length === 0) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        searchActiveIndex++;
+        if (searchActiveIndex >= items.length) searchActiveIndex = 0;
+        updateDropdownSelection(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        searchActiveIndex--;
+        if (searchActiveIndex < 0) searchActiveIndex = items.length - 1;
+        updateDropdownSelection(items);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (searchActiveIndex >= 0 && searchActiveIndex < items.length) {
+          items[searchActiveIndex].click();
+        }
+      }
+    });
+
+    function updateDropdownSelection(items) {
+      items.forEach(item => item.classList.remove('active'));
+      if (searchActiveIndex >= 0 && searchActiveIndex < items.length) {
+        const activeItem = items[searchActiveIndex];
+        activeItem.classList.add('active');
+        activeItem.scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+
+    async function loadDataFromExcel() {
+      try {
+        listContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">🔄 Loading data from Excel...</div>';
+        const response = await fetch('Danh sách phòng - bus.xlsx');
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+
+        const dataSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const leaderSheet = workbook.Sheets['Bus Leader'];
+
+        const leaderData = XLSX.utils.sheet_to_json(leaderSheet);
+        const leadersByEmail = {};
+        leaderData.forEach(row => {
+          if (row['Leader Mail']) {
+            leadersByEmail[row['Leader Mail'].toLowerCase()] = {
+              phone: row['Leader Phone'] || '',
+              bus: row['Bus No']
+            };
+          }
+        });
+
+        const rawData = XLSX.utils.sheet_to_json(dataSheet);
+
+        const busesMap = new Map();
+        const roomsMap = new Map();
+
+        let currentFullName = '';
+        let currentBus = '';
+        let currentRoom = '';
+        let currentEmail = '';
+
+        rawData.forEach(row => {
+          // Update current trackers if it's the start of a merged cell group
+          if (row['Full name']) {
+            currentFullName = row['Full name'].toString().trim();
+            currentEmail = row['Email'] ? row['Email'].toString().trim() : '';
+            currentBus = row['Bus'] ? row['Bus'].toString().trim() : 'Unknown Bus';
+            currentRoom = row['Room'] ? row['Room'].toString().trim() : 'Unknown Room';
+
+            // 1. Add the Employee themselves
+            let isLeader = false;
+            let phone = '';
+            if (currentEmail && leadersByEmail[currentEmail.toLowerCase()] && leadersByEmail[currentEmail.toLowerCase()].bus === currentBus) {
+              isLeader = true;
+              phone = leadersByEmail[currentEmail.toLowerCase()].phone;
+            }
+
+            const employee = {
+              name: currentFullName,
+              email: currentEmail,
+              role_en: 'Employee',
+              role_vi: 'Nhân viên',
+              is_leader: isLeader,
+              phone: phone ? phone.toString() : '',
+              family_members: []
+            };
+
+            if (!busesMap.has(currentBus)) busesMap.set(currentBus, { id: 'bus-' + busesMap.size, name: currentBus, leader: null, members: [] });
+            if (!roomsMap.has(currentRoom)) roomsMap.set(currentRoom, { id: 'room-' + roomsMap.size, name: `Room ${currentRoom}`, name_vi: `Phòng ${currentRoom}`, members: [] });
+
+            busesMap.get(currentBus).members.push(employee);
+            roomsMap.get(currentRoom).members.push(employee);
+          }
+
+          // 2. Add the Family Member (if any on this row)
+          if (row['Người nhà']) {
+            let familyDesc = row['Người nhà'].toString().trim();
+            const parts = familyDesc.split('-').map(s => s.trim());
+            const fmName = parts[0] || '';
+
+            if (fmName) {
+              // Find the last employee added for this bus/room and attach the family member to them
+              if (busesMap.has(currentBus)) {
+                let busMembers = busesMap.get(currentBus).members;
+                let lastEmployee = busMembers[busMembers.length - 1];
+                if (lastEmployee) lastEmployee.family_members.push(fmName);
+              }
+              if (roomsMap.has(currentRoom)) {
+                let roomMembers = roomsMap.get(currentRoom).members;
+                let lastEmployee = roomMembers[roomMembers.length - 1];
+                if (lastEmployee && roomMembers[roomMembers.length - 1] !== busesMap.get(currentBus).members[busesMap.get(currentBus).members.length - 1]) {
+                  lastEmployee.family_members.push(fmName);
+                }
+              }
+            }
+          }
+        });
+
+        const newBuses = Array.from(busesMap.values());
+        const newRooms = Array.from(roomsMap.values());
+
+        newBuses.forEach(bus => {
+          const leader = bus.members.find(m => m.is_leader);
+          if (leader) {
+            bus.leader = { name: leader.name, phone: leader.phone };
+          }
+          bus.members.sort((a, b) => {
+            if (a.is_leader && !b.is_leader) return -1;
+            if (!a.is_leader && b.is_leader) return 1;
+            let aFam = (a.family_members && a.family_members.length > 0) ? 1 : 0;
+            let bFam = (b.family_members && b.family_members.length > 0) ? 1 : 0;
+            return aFam - bFam;
+          });
+        });
+
+        newRooms.forEach(room => {
+          room.members.sort((a, b) => {
+            let aFam = (a.family_members && a.family_members.length > 0) ? 1 : 0;
+            let bFam = (b.family_members && b.family_members.length > 0) ? 1 : 0;
+            return aFam - bFam;
+          });
+        });
+
+        newBuses.sort((a, b) => {
+          const aOwn = a.name.toLowerCase().includes('own transportation') ? 1 : 0;
+          const bOwn = b.name.toLowerCase().includes('own transportation') ? 1 : 0;
+          if (aOwn !== bOwn) return aOwn - bOwn;
+          return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
+        });
+
+        newRooms.sort((a, b) => {
+          return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
+        });
+
+        data.buses = newBuses;
+        data.rooms = newRooms;
+
+        initDirectory();
+
+        if (searchInput.value.trim() !== '') {
+          searchPerson();
+        } else {
+          renderList();
+        }
+
+      } catch (error) {
+        console.error("Error loading Excel file:", error);
+        listContent.innerHTML = '<div style="text-align:center; padding: 40px; color: #E65100; font-size: 1.1rem; line-height: 1.5;">⚠️ <strong>Không thể tải dữ liệu từ Excel.</strong><br><br>Vui lòng đảm bảo file <em>Danh sách phòng - bus.xlsx</em> nằm cùng thư mục và bạn đang chạy web qua local server (vd: npm start, Live Server).</div>';
+      }
+    }
+
+    setLanguage('en');
+    loadDataFromExcel();
+
+
+  </script>
+</body>
+
+</html>

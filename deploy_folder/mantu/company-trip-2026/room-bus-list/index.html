@@ -1601,7 +1601,7 @@
     async function loadDataFromExcel() {
       try {
         listContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">🔄 Loading data from Excel...</div>';
-        const response = await fetch('Danh sách phòng - bus.xlsx');
+        const response = await fetch('data.xlsx');
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 

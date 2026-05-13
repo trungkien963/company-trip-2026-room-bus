@@ -955,7 +955,7 @@
           <span id="btn-vi" style="color: #888; margin-left: 5px; transition: color 0.3s;"
             onclick="setLanguage('vi')">VN</span>
         </div>
-        <img src="Mantu_Logo.png" alt="Mantu Logo"
+        <img src="Mantu_Logo_Purple.png" alt="Mantu Logo"
           style="height: 35px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));" />
       </div>
       <div style="margin-top: 10px;">
@@ -987,7 +987,7 @@
   </main>
 
   <button class="fab-btn" onclick="openSidebar()">
-    📖 <span id="fab-text">Trip Info</span>
+    📖 <span id="fab-text">Guide Book</span>
   </button>
 
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
@@ -1117,7 +1117,7 @@
       document.getElementById('searchInput').placeholder = TRANSLATIONS[lang].placeholder;
       document.getElementById('tab-bus').innerHTML = `🚌 ${TRANSLATIONS[lang].busList}`;
       document.getElementById('tab-room').innerHTML = `🏨 ${TRANSLATIONS[lang].roomList}`;
-      document.getElementById('fab-text').textContent = lang === 'en' ? 'Trip Info' : 'Thông tin';
+      document.getElementById('fab-text').textContent = lang === 'en' ? 'Guide Book' : 'Thông tin';
 
       renderSidebar();
 
@@ -1445,7 +1445,7 @@
       if (lang === 'en') {
         html = `
                     <div class="sidebar-header">
-                        <h2>🌴 Trip Info & Agenda</h2>
+                        <h2>🌴 Guide Book & Agenda</h2>
                         <button class="close-btn" onclick="closeSidebar()">✕</button>
                     </div>
                     <div class="sidebar-body">
@@ -1454,7 +1454,7 @@
                             
                             <div class="day-badge">Day 1</div>
                             <ul class="timeline">
-                                <li><strong>06:30</strong> Departure</li>
+                                <li><strong>05:30</strong> Departure</li>
                                 <li><strong>09:00</strong> <b>Team Building</b> at Lan Vuong Tourist</li>
                                 <li><strong>12:00</strong> Lunch</li>
                                 <li><strong>15:00</strong> Check-in</li>
@@ -1510,7 +1510,7 @@
                             
                             <div class="day-badge">Ngày 1</div>
                             <ul class="timeline">
-                                <li><strong>06:30</strong> Xuất phát</li>
+                                <li><strong>05:30</strong> Xuất phát</li>
                                 <li><strong>09:00</strong> <b>Team Building</b> tại KDL Lan Vương</li>
                                 <li><strong>12:00</strong> Dùng bữa trưa</li>
                                 <li><strong>15:00</strong> Check-in nhận phòng</li>

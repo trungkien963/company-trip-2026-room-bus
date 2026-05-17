@@ -1160,9 +1160,7 @@
 
     function renderMember(member, highlight = false) {
       const initials = getInitials(member.name);
-      let roleName = lang === 'en' ? member.role_en : member.role_vi;
-      if (roleName === 'Member') roleName = 'Employee';
-      if (roleName === 'Thành viên') roleName = 'Nhân viên';
+      let roleName = '';
       if (member.is_leader) {
         roleName = lang === 'en' ? 'Bus Leader' : 'Trưởng xe';
       }
@@ -1172,6 +1170,8 @@
       if (member.is_leader && member.phone) {
         extraInfo = ` - ${TRANSLATIONS[lang].phone}: ${member.phone}`;
       }
+
+      let roleHtml = roleName ? `<div class="member-role">${roleName}${extraInfo}</div>` : '';
 
       let emailHtml = member.email ? `<div class="member-email" style="display: none; font-size: 0.85rem; color: var(--primary); margin-top: 5px; word-break: break-all;">✉️ <a href="mailto:${member.email}" style="color: var(--primary); text-decoration: none;">${member.email}</a></div>` : '';
 
@@ -1193,7 +1193,7 @@
                     <div class="member-avatar">${initials}</div>
                     <div class="member-info" style="width: 100%;">
                         <div class="member-name">${displayName}</div>
-                        <div class="member-role">${roleName}${extraInfo}</div>
+                        ${roleHtml}
                         ${familyBlock}
                         ${emailHtml}
                     </div>
@@ -1309,8 +1309,11 @@
           avatarIcon = '✉️';
           subtext = `<span class="search-dropdown-sub">(${m.info.memberData.name})</span>`;
         } else {
-          let role = lang === 'en' ? m.info.memberData.role_en : m.info.memberData.role_vi;
-          subtext = `<span class="search-dropdown-sub">${role}</span>`;
+          let role = '';
+          if (m.info.memberData.is_leader) {
+             role = lang === 'en' ? 'Bus Leader' : 'Trưởng xe';
+          }
+          subtext = role ? `<span class="search-dropdown-sub">${role}</span>` : '';
         }
 
         // escape quotes for onclick
@@ -1341,12 +1344,12 @@
       const myRoom = match.room;
 
       let displayName = (lang === 'vi' && match.memberData.name_vi) ? match.memberData.name_vi : match.memberData.name;
-      let roleName = lang === 'en' ? match.memberData.role_en : match.memberData.role_vi;
-      if (roleName === 'Member') roleName = 'Employee';
-      if (roleName === 'Thành viên') roleName = 'Nhân viên';
+      let roleName = '';
       if (match.memberData.is_leader) {
         roleName = lang === 'en' ? 'Bus Leader' : 'Trưởng xe';
       }
+
+      let roleHtml = roleName ? `<p>${roleName}</p>` : '';
 
       let html = `
                 <div class="personal-card">
@@ -1354,7 +1357,7 @@
                         <div class="member-avatar" style="color: white; border: 2px solid white;">${getInitials(searchedName)}</div>
                         <div>
                             <h2>${displayName}</h2>
-                            <p>${roleName}</p>
+                            ${roleHtml}
                         </div>
                     </div>
                     <div class="personal-body">

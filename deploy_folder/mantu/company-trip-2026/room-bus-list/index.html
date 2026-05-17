@@ -1151,12 +1151,6 @@
       renderList();
     }
 
-    function toggleEmail(element) {
-      const emailDiv = element.querySelector('.member-email');
-      if (emailDiv) {
-        emailDiv.style.display = emailDiv.style.display === 'none' ? 'block' : 'none';
-      }
-    }
 
     function renderMember(member, highlight = false) {
       const initials = getInitials(member.name);
@@ -1173,7 +1167,7 @@
 
       let roleHtml = roleName ? `<div class="member-role">${roleName}${extraInfo}</div>` : '';
 
-      let emailHtml = member.email ? `<div class="member-email" style="display: none; font-size: 0.85rem; color: var(--primary); margin-top: 5px; word-break: break-all;">✉️ <a href="mailto:${member.email}" style="color: var(--primary); text-decoration: none;">${member.email}</a></div>` : '';
+      let emailHtml = member.email ? `<div class="member-email" style="font-size: 0.85rem; color: var(--primary); margin-top: 5px; word-break: break-all;">✉️ <a href="mailto:${member.email}" style="color: var(--primary); text-decoration: none;">${member.email}</a></div>` : '';
 
       let familyBlock = '';
       if (member.family_members && member.family_members.length > 0) {
@@ -1189,7 +1183,7 @@
       }
 
       return `
-                <li class="member-item ${highlight ? 'searched-person' : ''} ${member.is_leader ? 'is-leader' : ''}" onclick="toggleEmail(this)" style="cursor: pointer;">
+                <li class="member-item ${highlight ? 'searched-person' : ''} ${member.is_leader ? 'is-leader' : ''}">
                     <div class="member-avatar">${initials}</div>
                     <div class="member-info" style="width: 100%;">
                         <div class="member-name">${displayName}</div>

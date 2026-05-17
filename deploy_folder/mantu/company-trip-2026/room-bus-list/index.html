@@ -1264,9 +1264,14 @@
       }
 
       let matches = [];
+      const queryParts = query.split(' ').filter(p => p.length > 0);
       for (let [key, info] of directory.entries()) {
         const normalizedKey = removeAccents(key);
-        if (normalizedKey.includes(query)) {
+        const emailStr = info.email ? removeAccents(info.email.toLowerCase()) : '';
+        
+        const isMatch = queryParts.every(part => normalizedKey.includes(part) || emailStr.includes(part));
+        
+        if (isMatch) {
           matches.push({ key, info });
         }
       }
@@ -1614,7 +1619,7 @@
           if (row['Leader Mail']) {
             leadersByEmail[row['Leader Mail'].toLowerCase()] = {
               phone: row['Leader Phone'] || '',
-              bus: row['Bus No']
+              bus: row['Bus No'] != null ? row['Bus No'].toString().trim() : ''
             };
           }
         });
@@ -1656,7 +1661,9 @@
             };
 
             if (!busesMap.has(currentBus)) busesMap.set(currentBus, { id: 'bus-' + busesMap.size, name: currentBus, leader: null, members: [] });
-            if (!roomsMap.has(currentRoom)) roomsMap.set(currentRoom, { id: 'room-' + roomsMap.size, name: `Room ${currentRoom}`, name_vi: `Phòng ${currentRoom}`, members: [] });
+            if (!roomsMap.has(currentRoom)) {
+              roomsMap.set(currentRoom, { id: 'room-' + roomsMap.size, name: `TBD`, name_vi: `Đang cập nhật`, members: [] });
+            }
 
             busesMap.get(currentBus).members.push(employee);
             roomsMap.get(currentRoom).members.push(employee);
@@ -1665,24 +1672,31 @@
           // 2. Add the Family Member (if any on this row)
           if (row['Người nhà']) {
             let familyDesc = row['Người nhà'].toString().trim();
-            const parts = familyDesc.split('-').map(s => s.trim());
-            const fmName = parts[0] || '';
-
-            if (fmName) {
-              // Find the last employee added for this bus/room and attach the family member to them
-              if (busesMap.has(currentBus)) {
-                let busMembers = busesMap.get(currentBus).members;
-                let lastEmployee = busMembers[busMembers.length - 1];
-                if (lastEmployee) lastEmployee.family_members.push(fmName);
-              }
-              if (roomsMap.has(currentRoom)) {
-                let roomMembers = roomsMap.get(currentRoom).members;
-                let lastEmployee = roomMembers[roomMembers.length - 1];
-                if (lastEmployee && roomMembers[roomMembers.length - 1] !== busesMap.get(currentBus).members[busesMap.get(currentBus).members.length - 1]) {
-                  lastEmployee.family_members.push(fmName);
+            let familyLines = familyDesc.split(/\r?\n/);
+            
+            familyLines.forEach(line => {
+              let lineTrimmed = line.trim();
+              if (lineTrimmed) {
+                const parts = lineTrimmed.split('-').map(s => s.trim());
+                const fmName = parts[0] || '';
+  
+                if (fmName) {
+                  // Find the last employee added for this bus/room and attach the family member to them
+                  if (busesMap.has(currentBus)) {
+                    let busMembers = busesMap.get(currentBus).members;
+                    let lastEmployee = busMembers[busMembers.length - 1];
+                    if (lastEmployee) lastEmployee.family_members.push(fmName);
+                  }
+                  if (roomsMap.has(currentRoom)) {
+                    let roomMembers = roomsMap.get(currentRoom).members;
+                    let lastEmployee = roomMembers[roomMembers.length - 1];
+                    if (lastEmployee && roomMembers[roomMembers.length - 1] !== busesMap.get(currentBus).members[busesMap.get(currentBus).members.length - 1]) {
+                      lastEmployee.family_members.push(fmName);
+                    }
+                  }
                 }
               }
-            }
+            });
           }
         });
 

@@ -1176,7 +1176,7 @@
 
       let roleHtml = roleName ? `<div class="member-role">${roleName}${extraInfo}</div>` : '';
 
-      let emailHtml = member.email ? `<div class="member-email" style="font-size: 0.85rem; color: var(--primary); margin-top: 5px; word-break: break-all;">✉️ <a href="mailto:${member.email}" style="color: var(--primary); text-decoration: none;">${member.email}</a></div>` : '';
+      let emailHtml = member.email ? `<div class="member-email" style="font-size: 0.85rem; color: #888; margin-top: 5px; word-break: break-all;">✉️ <a href="mailto:${member.email}" style="color: #888; text-decoration: none;">${member.email}</a></div>` : '';
 
       let familyBlock = '';
       if (member.family_members && member.family_members.length > 0) {
@@ -1216,11 +1216,10 @@
 
           let totalPeople = bus.members.reduce((sum, m) => sum + 1 + (m.family_members ? m.family_members.length : 0), 0);
 
-          let chevron = isExpanded ? '▲' : '▼';
           html += `
                         <div class="group-card" id="card-${bus.id}" style="margin-bottom: 0;">
                             <div class="group-header" onclick="toggleBusMore('${bus.id}')" style="cursor: pointer; padding: 10px; margin: -10px -10px 20px -10px; border-radius: 12px; transition: background 0.2s;" onmouseover="this.style.background='rgba(56,142,60,0.05)'" onmouseout="this.style.background='transparent'">
-                                <h3 style="margin: 0; color: var(--dark); font-size: 1.3rem;">${bus.name} ${hasMore ? `<span style="font-size: 1rem; color: #aaa; margin-left: 8px;">${chevron}</span>` : ''}</h3>
+                                <h3 style="margin: 0; color: var(--dark); font-size: 1.3rem;">${bus.name}</h3>
                                 <span class="group-badge">${totalPeople} ${TRANSLATIONS[lang].people}</span>
                             </div>
                             <ul class="member-list">

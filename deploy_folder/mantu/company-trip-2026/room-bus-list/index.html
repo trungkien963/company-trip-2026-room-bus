@@ -1627,9 +1627,10 @@
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
         const dataSheet = workbook.Sheets[workbook.SheetNames[0]];
-        const leaderSheet = workbook.Sheets['Bus Leader'];
+        const leaderSheetName = workbook.SheetNames.find(n => n.toLowerCase() === 'bus leader');
+        const leaderSheet = leaderSheetName ? workbook.Sheets[leaderSheetName] : null;
 
-        const leaderData = XLSX.utils.sheet_to_json(leaderSheet);
+        const leaderData = leaderSheet ? XLSX.utils.sheet_to_json(leaderSheet) : [];
         const leadersByEmail = {};
         leaderData.forEach(row => {
           if (row['Leader Mail']) {

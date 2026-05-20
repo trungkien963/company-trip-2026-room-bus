@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Mekong Fiesta - Assignments</title>
   <link rel="icon" type="image/png" href="logo_favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Montserrat:wght@300;400;600;800;900&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Montserrat:wght@300;400;600;800;900&display=swap"
     rel="stylesheet">
   <style>
     :root {
@@ -955,7 +956,7 @@
           <span id="btn-vi" style="color: #888; margin-left: 5px; transition: color 0.3s;"
             onclick="setLanguage('vi')">VN</span>
         </div>
-        <img src="Mantu_Logo.png" alt="Mantu Logo"
+        <img src="Mantu_Logo_Purple.png" alt="Mantu Logo"
           style="height: 35px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));" />
       </div>
       <div style="margin-top: 10px;">
@@ -987,7 +988,7 @@
   </main>
 
   <button class="fab-btn" onclick="openSidebar()">
-    📖 <span id="fab-text">Trip Info</span>
+    📖 <span id="fab-text">Guide Book</span>
   </button>
 
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
@@ -1108,6 +1109,15 @@
       return str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
     }
 
+    function formatBusName(name) {
+      if (!name) return '';
+      const trimmed = name.toString().trim();
+      if (/^\d+$/.test(trimmed)) {
+        return 'Bus ' + trimmed;
+      }
+      return trimmed;
+    }
+
     function setLanguage(l) {
       lang = l;
       document.getElementById('btn-en').style.color = lang === 'en' ? 'var(--primary)' : '#888';
@@ -1117,7 +1127,7 @@
       document.getElementById('searchInput').placeholder = TRANSLATIONS[lang].placeholder;
       document.getElementById('tab-bus').innerHTML = `🚌 ${TRANSLATIONS[lang].busList}`;
       document.getElementById('tab-room').innerHTML = `🏨 ${TRANSLATIONS[lang].roomList}`;
-      document.getElementById('fab-text').textContent = lang === 'en' ? 'Trip Info' : 'Thông tin';
+      document.getElementById('fab-text').textContent = lang === 'en' ? 'Guide Book' : 'Thông tin';
 
       renderSidebar();
 
@@ -1146,23 +1156,24 @@
       return 'U';
     }
 
-    function toggleBusMore(id) {
+    function toggleBusMore(id, scrollToTop = false) {
       busExpandedState[id] = !busExpandedState[id];
       renderList();
-    }
-
-    function toggleEmail(element) {
-      const emailDiv = element.querySelector('.member-email');
-      if (emailDiv) {
-        emailDiv.style.display = emailDiv.style.display === 'none' ? 'block' : 'none';
+      if (scrollToTop && !busExpandedState[id]) {
+        setTimeout(() => {
+          const el = document.getElementById('card-' + id);
+          if (el) {
+            const y = el.getBoundingClientRect().top + window.scrollY - 100;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        }, 50);
       }
     }
 
+
     function renderMember(member, highlight = false) {
       const initials = getInitials(member.name);
-      let roleName = lang === 'en' ? member.role_en : member.role_vi;
-      if (roleName === 'Member') roleName = 'Employee';
-      if (roleName === 'Thành viên') roleName = 'Nhân viên';
+      let roleName = '';
       if (member.is_leader) {
         roleName = lang === 'en' ? 'Bus Leader' : 'Trưởng xe';
       }
@@ -1173,7 +1184,9 @@
         extraInfo = ` - ${TRANSLATIONS[lang].phone}: ${member.phone}`;
       }
 
-      let emailHtml = member.email ? `<div class="member-email" style="display: none; font-size: 0.85rem; color: var(--primary); margin-top: 5px; word-break: break-all;">✉️ <a href="mailto:${member.email}" style="color: var(--primary); text-decoration: none;">${member.email}</a></div>` : '';
+      let roleHtml = roleName ? `<div class="member-role">${roleName}${extraInfo}</div>` : '';
+
+      let emailHtml = member.email ? `<div class="member-email" style="font-size: 0.85rem; color: #888; margin-top: 5px; word-break: break-all;">✉️ <a href="mailto:${member.email}" style="color: #888; text-decoration: none;">${member.email}</a></div>` : '';
 
       let familyBlock = '';
       if (member.family_members && member.family_members.length > 0) {
@@ -1189,11 +1202,11 @@
       }
 
       return `
-                <li class="member-item ${highlight ? 'searched-person' : ''} ${member.is_leader ? 'is-leader' : ''}" onclick="toggleEmail(this)" style="cursor: pointer;">
+                <li class="member-item ${highlight ? 'searched-person' : ''} ${member.is_leader ? 'is-leader' : ''}">
                     <div class="member-avatar">${initials}</div>
                     <div class="member-info" style="width: 100%;">
                         <div class="member-name">${displayName}</div>
-                        <div class="member-role">${roleName}${extraInfo}</div>
+                        ${roleHtml}
                         ${familyBlock}
                         ${emailHtml}
                     </div>
@@ -1214,15 +1227,15 @@
           let totalPeople = bus.members.reduce((sum, m) => sum + 1 + (m.family_members ? m.family_members.length : 0), 0);
 
           html += `
-                        <div class="group-card" style="margin-bottom: 0;">
-                            <div class="group-header">
-                                <h3 style="margin: 0; color: var(--dark); font-size: 1.3rem;">${bus.name}</h3>
+                        <div class="group-card" id="card-${bus.id}" style="margin-bottom: 0;">
+                            <div class="group-header" onclick="toggleBusMore('${bus.id}')" style="cursor: pointer; padding: 10px; margin: -10px -10px 20px -10px; border-radius: 12px; transition: background 0.2s;" onmouseover="this.style.background='rgba(56,142,60,0.05)'" onmouseout="this.style.background='transparent'">
+                                <h3 style="margin: 0; color: var(--dark); font-size: 1.3rem;">${formatBusName(bus.name)}</h3>
                                 <span class="group-badge">${totalPeople} ${TRANSLATIONS[lang].people}</span>
                             </div>
                             <ul class="member-list">
                                 ${showMembers.map(m => renderMember(m)).join('')}
                             </ul>
-                            ${hasMore ? `<button class="show-more-btn" onclick="toggleBusMore('${bus.id}')">${btnText}</button>` : ''}
+                            ${hasMore ? `<button class="show-more-btn" onclick="toggleBusMore('${bus.id}', true)">${btnText}</button>` : ''}
                         </div>
                     `;
         });
@@ -1264,9 +1277,14 @@
       }
 
       let matches = [];
+      const queryParts = query.split(' ').filter(p => p.length > 0);
       for (let [key, info] of directory.entries()) {
         const normalizedKey = removeAccents(key);
-        if (normalizedKey.includes(query)) {
+        const emailStr = info.email ? removeAccents(info.email.toLowerCase()) : '';
+
+        const isMatch = queryParts.every(part => normalizedKey.includes(part) || emailStr.includes(part));
+
+        if (isMatch) {
           matches.push({ key, info });
         }
       }
@@ -1304,8 +1322,11 @@
           avatarIcon = '✉️';
           subtext = `<span class="search-dropdown-sub">(${m.info.memberData.name})</span>`;
         } else {
-          let role = lang === 'en' ? m.info.memberData.role_en : m.info.memberData.role_vi;
-          subtext = `<span class="search-dropdown-sub">${role}</span>`;
+          let role = '';
+          if (m.info.memberData.is_leader) {
+            role = lang === 'en' ? 'Bus Leader' : 'Trưởng xe';
+          }
+          subtext = role ? `<span class="search-dropdown-sub">${role}</span>` : '';
         }
 
         // escape quotes for onclick
@@ -1336,12 +1357,12 @@
       const myRoom = match.room;
 
       let displayName = (lang === 'vi' && match.memberData.name_vi) ? match.memberData.name_vi : match.memberData.name;
-      let roleName = lang === 'en' ? match.memberData.role_en : match.memberData.role_vi;
-      if (roleName === 'Member') roleName = 'Employee';
-      if (roleName === 'Thành viên') roleName = 'Nhân viên';
+      let roleName = '';
       if (match.memberData.is_leader) {
         roleName = lang === 'en' ? 'Bus Leader' : 'Trưởng xe';
       }
+
+      let roleHtml = roleName ? `<p>${roleName}</p>` : '';
 
       let html = `
                 <div class="personal-card">
@@ -1349,7 +1370,7 @@
                         <div class="member-avatar" style="color: white; border: 2px solid white;">${getInitials(searchedName)}</div>
                         <div>
                             <h2>${displayName}</h2>
-                            <p>${roleName}</p>
+                            ${roleHtml}
                         </div>
                     </div>
                     <div class="personal-body">
@@ -1393,7 +1414,7 @@
         html += `
                     <div class="personal-section" style="max-height: 500px; overflow-y: auto;">
                         <h4>${TRANSLATIONS[lang].busInfo}</h4>
-                        <div class="highlight-info">${myBus.name}</div>
+                        <div class="highlight-info">${formatBusName(myBus.name)}</div>
                         <h5 style="margin: 15px 0 10px 0; color: #666;">${TRANSLATIONS[lang].busmates}</h5>
                         <ul class="member-list" style="gap: 5px;">
                             ${sortedBusMembers.map(m => renderMember(m, m.name === searchedName)).join('')}
@@ -1445,7 +1466,7 @@
       if (lang === 'en') {
         html = `
                     <div class="sidebar-header">
-                        <h2>🌴 Trip Info & Agenda</h2>
+                        <h2>🌴 Guide Book & Agenda</h2>
                         <button class="close-btn" onclick="closeSidebar()">✕</button>
                     </div>
                     <div class="sidebar-body">
@@ -1454,44 +1475,75 @@
                             
                             <div class="day-badge">Day 1</div>
                             <ul class="timeline">
-                                <li><strong>06:30</strong> Departure</li>
-                                <li><strong>09:00</strong> <b>Team Building</b> at Lan Vuong Tourist</li>
-                                <li><strong>12:00</strong> Lunch</li>
-                                <li><strong>15:00</strong> Check-in</li>
-                                <li><strong>18:00</strong> Gala Dinner</li>
+                                <li><strong>05:30</strong> <b>Departure</b> at Viettel Tower</li>
+                                <li><strong>09:00</strong> <b>Team Building</b> at Lan Vuong Tourist Area</li>
+                                <li><strong>12:00</strong> <b>Lunch</b> at Lan Vuong Tourist Area</li>
+                                <li><strong>15:00</strong> <b>Check-in</b> at Sheraton Can Tho</li>
+                                <li><strong>18:00</strong> <b>Gala Dinner</b></li>
                             </ul>
 
                             <div class="day-badge">Day 2</div>
                             <ul class="timeline">
-                                <li><strong>06:00</strong> Breakfast and leisure time</li>
-                                <li><strong>07:30</strong> Cai Rang Floating Market (optional)</li>
-                                <li><strong>11:00</strong> Checkout</li>
-                                <li><strong>12:00</strong> Lunch at Van Phat Riverside</li>
-                                <li><strong>17:30</strong> Arrival at Ho Chi Minh City</li>
+                                <li><strong>06:00</strong> <b>Breakfast</b> and leisure time</li>
+                                <li><strong>07:00</strong> <b>Cai Rang Floating Market tour</b> <span style="font-size: 0.75rem; background: #fff3cd; color: #856404; padding: 2px 6px; border-radius: 4px; margin-left: 5px; font-weight: 600;">Optional</span></li>
+                                <li><strong>11:00</strong> <b>Checkout</b></li>
+                                <li><strong>12:00</strong> <b>Lunch</b> at Van Phat Riverside</li>
+                                <li><strong>17:30</strong> <b>Arrival</b> at Ho Chi Minh City</li>
                             </ul>
                         </div>
 
                         <div class="info-card">
-                            <h3>📍 Meeting Info</h3>
-                            <p><strong>Location:</strong> Viettel Tower, 285 Cach Mang Thang Tam Street, Ward Hoa Hung, Ho Chi Minh City</p>
-                            <p><strong>Meet-up time:</strong> 07:00 AM</p>
-                            <p><strong>Departure time:</strong> 07:30 AM</p>
+                            <h3>📍 Gathering Info</h3>
+                            <p><strong>Location:</strong> Viettel Tower, 285 Cach Mang Thang Tam Street, Hoa Hung Ward, Ho Chi Minh City</p>
+                            <p><strong>Meet-up time:</strong> 05:15 AM</p>
+                            <p><strong>Departure time:</strong> 05:30 AM</p>
                             <div class="highlight-note">
-                                *Be on time so we can all depart together!<br><br>
-                                If you're coming by your own transport, feel free to time it so you can join us for lunch with everyone!
+                                *<b style="color: red;">Be on time</b> so we can all depart together!<br><br>
+                                If you're coming by your own transport, try to arrive early so you can join us for the amazing team-building games!
                             </div>
                         </div>
 
                         <div class="info-card reminder-card">
                             <h3>💡 Friendly Reminders</h3>
-                            <p><strong>Keep Your Treasures Safe:</strong> Just a little reminder to keep an eye on your personal belongings – we want them to have a great trip too!</p>
-                            <p><strong>Your Well-being Matters:</strong> Your safety and happiness are our top priority! Enjoy all the activities, and please remember to look out for yourselves and each other.</p>
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="margin-bottom: 16px;">
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">▪️ Team Building Tip</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">We'll be wearing traditional "Ba Ba" outfits at Lan Vuong! Please pack your change of clothes in a <strong>small day-bag</strong> to carry with you. Accessing the main bus luggage during this time can be inconvenient, so having your clothes handy will help you change quickly and easily.</div>
+                                </li>
+                                <li style="margin-bottom: 16px;">
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">▪️ Keep Your Luggage Safe</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">Remember to keep an eye on your personal belongings – we want them to have a great trip too!</div>
+                                </li>
+                                <li>
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">▪️ Your Well-being Matters</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">Your safety and experience are our top priorities! Enjoy all the activities, and please remember to look out for yourselves and each other.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="info-card" style="border-color: rgba(255, 94, 0, 0.2); background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(255, 243, 224, 0.5));">
+                            <h3 style="color: #D84315;">🏨 Hotel Rules</h3>
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="margin-bottom: 16px;">
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">1. No Smoking in Rooms</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">Under hotel policy, smoking inside the bedroom is <strong>strictly prohibited</strong>. If caught, the hotel will impose a direct fine of <strong>5,000,000 to 10,000,000 VND</strong> (for deep cleaning and deodorizing). The guest will be 100% responsible for paying this fine.<br><em style="color: #777; font-size: 0.85rem; margin-top: 4px; display: inline-block;">*Designated smoking areas are available on the 1st and 6th floors.</em></div>
+                                </li>
+                                <li style="margin-bottom: 16px;">
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">2. Pool Operating Hours</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">The pool will be closed for swimming <strong>after 19:00</strong> daily. However, the surrounding pool area remains open for you to relax and enjoy the evening breeze.</div>
+                                </li>
+                                <li>
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">3. Gala Dinner Policy</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">A wonderful food and beverage menu has been prepared for the Gala Dinner. Please <strong>do not bring any outside food or drinks (including alcohol)</strong> into the event area. Any surcharge or penalty fees from the restaurant for violations will be borne directly by the individual.</div>
+                                </li>
+                            </ul>
+                            <p style="margin-top: 15px; font-style: italic; color: #D84315; text-align: center;">Thank you for your cooperation in making this a safe and memorable trip! 😊</p>
                         </div>
 
                         <div class="zalo-cta">
                             <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://zalo.me/g/djrgufy0irvrhjcq5m4l" alt="Zalo QR" class="zalo-qr">
                             <div class="zalo-cta-text">
-                                <strong>Join Dunescape Zalo!</strong>
+                                <strong>Join Mekong Fiesta Zalo!</strong>
                                 Scan QR or click below for live updates & fun trip moments!
                                 <a href="https://zalo.me/g/djrgufy0irvrhjcq5m4l" target="_blank" class="zalo-btn">Join Zalo Group</a>
                             </div>
@@ -1506,42 +1558,73 @@
                     </div>
                     <div class="sidebar-body">
                         <div class="info-card">
-                            <h3>📅 Lịch trình (Agenda)</h3>
+                            <h3>📅 Lịch trình</h3>
                             
                             <div class="day-badge">Ngày 1</div>
                             <ul class="timeline">
-                                <li><strong>06:30</strong> Xuất phát</li>
+                                <li><strong>05:30</strong> <b>Xuất phát</b> tại Viettel Tower</li>
                                 <li><strong>09:00</strong> <b>Team Building</b> tại KDL Lan Vương</li>
-                                <li><strong>12:00</strong> Dùng bữa trưa</li>
-                                <li><strong>15:00</strong> Check-in nhận phòng</li>
-                                <li><strong>18:00</strong> Tiệc tối Gala Dinner</li>
+                                <li><strong>12:00</strong> <b>Ăn trưa</b> tại KDL Lan Vương</li>
+                                <li><strong>15:00</strong> <b>Check-in</b> tại Sheraton Can Tho</li>
+                                <li><strong>18:00</strong> <b>Tiệc tối Gala Dinner</b></li>
                             </ul>
 
                             <div class="day-badge">Ngày 2</div>
                             <ul class="timeline">
-                                <li><strong>06:00</strong> Dùng bữa sáng & Sinh hoạt tự do</li>
-                                <li><strong>07:30</strong> Tham quan Chợ nổi Cái Răng (Tùy chọn)</li>
-                                <li><strong>11:00</strong> Check-out trả phòng</li>
-                                <li><strong>12:00</strong> Dùng bữa trưa tại Vạn Phát Riverside</li>
-                                <li><strong>17:30</strong> Về đến TP. HCM</li>
+                                <li><strong>06:00</strong> <b>Ăn sáng</b> & sinh hoạt tự do</li>
+                                <li><strong>07:00</strong> <b>Tham quan Chợ nổi Cái Răng</b> <span style="font-size: 0.75rem; background: #fff3cd; color: #856404; padding: 2px 6px; border-radius: 4px; margin-left: 5px; font-weight: 600;">Tùy chọn</span></li>
+                                <li><strong>11:00</strong> <b>Trả phòng</b></li>
+                                <li><strong>12:00</strong> <b>Ăn trưa</b> tại Vạn Phát Riverside</li>
+                                <li><strong>17:30</strong> <b>Về đến</b> TP. HCM</li>
                             </ul>
                         </div>
 
                         <div class="info-card">
                             <h3>📍 Thông tin tập trung</h3>
                             <p><strong>Địa điểm:</strong> Viettel Tower, 285 Cách Mạng Tháng 8, P.Hoà Hưng, TP.HCM</p>
-                            <p><strong>Có mặt lúc:</strong> 07:00 AM</p>
-                            <p><strong>Khởi hành lúc:</strong> 07:30 AM</p>
+                            <p><strong>Có mặt lúc:</strong> 05:15 AM</p>
+                            <p><strong>Khởi hành lúc:</strong> 05:30 AM</p>
                             <div class="highlight-note">
-                                *Vui lòng đúng giờ để đoàn cùng xuất phát nhé!<br><br>
-                                Nếu bạn đi xe tự túc, hãy canh thời gian để nhập đoàn ăn trưa cùng mọi người nha!
+                                *<b style="color: red;">Vui lòng đúng giờ</b> để đoàn cùng xuất phát nhé!<br><br>
+                                Nếu bạn đi xe tự túc, hãy cố gắng đến sớm để nhập cuộc các trò chơi team-building bùng nổ cùng mọi người nha!
                             </div>
                         </div>
 
                         <div class="info-card reminder-card">
-                            <h3>💡 Nhắc nhở (Reminders)</h3>
-                            <p><strong>Bảo quản tư trang:</strong> Vui lòng chú ý tự bảo quản đồ đạc và tài sản cá nhân cẩn thận để tránh thất lạc trong lúc vui chơi nhé!</p>
-                            <p><strong>An toàn là trên hết:</strong> Sự an toàn của bạn là quan trọng nhất! Hãy cứ chơi hết mình, nhưng nhớ chú ý an toàn cho bản thân và đồng nghiệp nha.</p>
+                            <h3>💡 Nhắc nhở</h3>
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="margin-bottom: 16px;">
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">▪️ Mẹo nhỏ cho Team Building</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">Tại Lan Vương, đoàn mình sẽ được phát áo bà ba để tham gia trò chơi. Bạn nhớ để sẵn đồ thay vào một <strong>túi nhỏ xách theo bên mình</strong> nha! Việc chờ lấy hành lý từ hầm xe sẽ khá bất tiện, nên xách đồ theo sẵn sẽ giúp bạn thay trang phục nhanh chóng và linh động hơn.</div>
+                                </li>
+                                <li style="margin-bottom: 16px;">
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">▪️ Bảo quản tư trang</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">Vui lòng chú ý tự bảo quản đồ đạc và tài sản cá nhân cẩn thận để tránh thất lạc trong lúc vui chơi nhé!</div>
+                                </li>
+                                <li>
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">▪️ An toàn là trên hết</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">Sự an toàn của bạn là quan trọng nhất! Hãy cứ chơi hết mình, nhưng nhớ chú ý an toàn cho bản thân và đồng nghiệp nha.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="info-card" style="border-color: rgba(255, 94, 0, 0.2); background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(255, 243, 224, 0.5));">
+                            <h3 style="color: #D84315;">🏨 Quy định Khách sạn</h3>
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="margin-bottom: 16px;">
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">1. Tuyệt đối không hút thuốc trong phòng</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">Theo quy định khắt khe của khách sạn, việc hút thuốc bên trong phòng ngủ bị <strong>nghiêm cấm hoàn toàn</strong>. Nếu phát hiện vi phạm, khách sạn sẽ áp dụng mức phạt trực tiếp từ <strong>5.000.000 VNĐ đến 10.000.000 VNĐ</strong> (phí khử mùi và vệ sinh chuyên sâu). Cá nhân người lưu trú sẽ phải tự thanh toán 100% khoản tiền phạt này.<br><em style="color: #777; font-size: 0.85rem; margin-top: 4px; display: inline-block;">*Khu vực hút thuốc được cho phép tại tầng 1 và tầng 6.</em></div>
+                                </li>
+                                <li style="margin-bottom: 16px;">
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">2. Giờ hoạt động hồ bơi</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">Hồ bơi sẽ ngưng phục vụ các hoạt động dưới nước <strong>sau 19h00</strong> hàng ngày. Dù vậy, khu vực khuôn viên quanh hồ vẫn luôn mở cửa để bạn dạo mát và thư giãn buổi tối.</div>
+                                </li>
+                                <li>
+                                    <div style="font-weight: 600; color: #333; margin-bottom: 4px;">3. Quy định đêm Gala</div>
+                                    <div style="color: #555; font-size: 0.9rem; line-height: 1.5; padding-left: 16px;">Đêm Gala đã được chuẩn bị sẵn thực đơn đồ ăn và thức uống vô cùng chu đáo. Vui lòng <strong>không mang theo đồ ăn, thức uống (bao gồm cả rượu bia) từ bên ngoài</strong> vào khu vực tiệc. Nếu vi phạm, các khoản phí phụ thu hoặc phạt từ nhà hàng sẽ do cá nhân người mang tự thanh toán.</div>
+                                </li>
+                            </ul>
+                            <p style="margin-top: 15px; font-style: italic; color: #D84315; text-align: center;">Cảm ơn sự hợp tác của bạn để tạo nên một chuyến đi an toàn và đáng nhớ! 😊</p>
                         </div>
 
                         <div class="zalo-cta">
@@ -1601,20 +1684,21 @@
     async function loadDataFromExcel() {
       try {
         listContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">🔄 Loading data from Excel...</div>';
-        const response = await fetch('data.xlsx');
+        const response = await fetch('data.xlsx?v=' + new Date().getTime());
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
         const dataSheet = workbook.Sheets[workbook.SheetNames[0]];
-        const leaderSheet = workbook.Sheets['Bus Leader'];
+        const leaderSheetName = workbook.SheetNames.find(n => n.toLowerCase() === 'bus leader');
+        const leaderSheet = leaderSheetName ? workbook.Sheets[leaderSheetName] : null;
 
-        const leaderData = XLSX.utils.sheet_to_json(leaderSheet);
+        const leaderData = leaderSheet ? XLSX.utils.sheet_to_json(leaderSheet) : [];
         const leadersByEmail = {};
         leaderData.forEach(row => {
           if (row['Leader Mail']) {
             leadersByEmail[row['Leader Mail'].toLowerCase()] = {
               phone: row['Leader Phone'] || '',
-              bus: row['Bus No']
+              bus: row['Bus No'] != null ? row['Bus No'].toString().trim() : ''
             };
           }
         });
@@ -1656,7 +1740,9 @@
             };
 
             if (!busesMap.has(currentBus)) busesMap.set(currentBus, { id: 'bus-' + busesMap.size, name: currentBus, leader: null, members: [] });
-            if (!roomsMap.has(currentRoom)) roomsMap.set(currentRoom, { id: 'room-' + roomsMap.size, name: `Room ${currentRoom}`, name_vi: `Phòng ${currentRoom}`, members: [] });
+            if (!roomsMap.has(currentRoom)) {
+              roomsMap.set(currentRoom, { id: 'room-' + roomsMap.size, name: `TBD`, name_vi: `Đang cập nhật`, members: [] });
+            }
 
             busesMap.get(currentBus).members.push(employee);
             roomsMap.get(currentRoom).members.push(employee);
@@ -1665,24 +1751,31 @@
           // 2. Add the Family Member (if any on this row)
           if (row['Người nhà']) {
             let familyDesc = row['Người nhà'].toString().trim();
-            const parts = familyDesc.split('-').map(s => s.trim());
-            const fmName = parts[0] || '';
+            let familyLines = familyDesc.split(/\r?\n/);
 
-            if (fmName) {
-              // Find the last employee added for this bus/room and attach the family member to them
-              if (busesMap.has(currentBus)) {
-                let busMembers = busesMap.get(currentBus).members;
-                let lastEmployee = busMembers[busMembers.length - 1];
-                if (lastEmployee) lastEmployee.family_members.push(fmName);
-              }
-              if (roomsMap.has(currentRoom)) {
-                let roomMembers = roomsMap.get(currentRoom).members;
-                let lastEmployee = roomMembers[roomMembers.length - 1];
-                if (lastEmployee && roomMembers[roomMembers.length - 1] !== busesMap.get(currentBus).members[busesMap.get(currentBus).members.length - 1]) {
-                  lastEmployee.family_members.push(fmName);
+            familyLines.forEach(line => {
+              let lineTrimmed = line.trim();
+              if (lineTrimmed) {
+                const parts = lineTrimmed.split('-').map(s => s.trim());
+                const fmName = parts[0] || '';
+
+                if (fmName) {
+                  // Find the last employee added for this bus/room and attach the family member to them
+                  if (busesMap.has(currentBus)) {
+                    let busMembers = busesMap.get(currentBus).members;
+                    let lastEmployee = busMembers[busMembers.length - 1];
+                    if (lastEmployee) lastEmployee.family_members.push(fmName);
+                  }
+                  if (roomsMap.has(currentRoom)) {
+                    let roomMembers = roomsMap.get(currentRoom).members;
+                    let lastEmployee = roomMembers[roomMembers.length - 1];
+                    if (lastEmployee && roomMembers[roomMembers.length - 1] !== busesMap.get(currentBus).members[busesMap.get(currentBus).members.length - 1]) {
+                      lastEmployee.family_members.push(fmName);
+                    }
+                  }
                 }
               }
-            }
+            });
           }
         });
 

@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Mekong Fiesta - Assignments</title>
   <link rel="icon" type="image/png" href="logo_favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Montserrat:wght@300;400;600;800;900&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Montserrat:wght@300;400;600;800;900&display=swap"
     rel="stylesheet">
   <style>
     :root {
@@ -1108,6 +1109,15 @@
       return str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
     }
 
+    function formatBusName(name) {
+      if (!name) return '';
+      const trimmed = name.toString().trim();
+      if (/^\d+$/.test(trimmed)) {
+        return 'Bus ' + trimmed;
+      }
+      return trimmed;
+    }
+
     function setLanguage(l) {
       lang = l;
       document.getElementById('btn-en').style.color = lang === 'en' ? 'var(--primary)' : '#888';
@@ -1216,7 +1226,7 @@
           html += `
                         <div class="group-card" style="margin-bottom: 0;">
                             <div class="group-header">
-                                <h3 style="margin: 0; color: var(--dark); font-size: 1.3rem;">${bus.name}</h3>
+                                <h3 style="margin: 0; color: var(--dark); font-size: 1.3rem;">${formatBusName(bus.name)}</h3>
                                 <span class="group-badge">${totalPeople} ${TRANSLATIONS[lang].people}</span>
                             </div>
                             <ul class="member-list">
@@ -1393,7 +1403,7 @@
         html += `
                     <div class="personal-section" style="max-height: 500px; overflow-y: auto;">
                         <h4>${TRANSLATIONS[lang].busInfo}</h4>
-                        <div class="highlight-info">${myBus.name}</div>
+                        <div class="highlight-info">${formatBusName(myBus.name)}</div>
                         <h5 style="margin: 15px 0 10px 0; color: #666;">${TRANSLATIONS[lang].busmates}</h5>
                         <ul class="member-list" style="gap: 5px;">
                             ${sortedBusMembers.map(m => renderMember(m, m.name === searchedName)).join('')}

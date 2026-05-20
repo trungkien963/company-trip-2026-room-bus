@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Mekong Fiesta - Assignments</title>
   <link rel="icon" type="image/png" href="logo_favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Montserrat:wght@300;400;600;800;900&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Montserrat:wght@300;400;600;800;900&display=swap"
     rel="stylesheet">
   <style>
     :root {
@@ -1108,6 +1109,15 @@
       return str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
     }
 
+    function formatBusName(name) {
+      if (!name) return '';
+      const trimmed = name.toString().trim();
+      if (/^\d+$/.test(trimmed)) {
+        return 'Bus ' + trimmed;
+      }
+      return trimmed;
+    }
+
     function setLanguage(l) {
       lang = l;
       document.getElementById('btn-en').style.color = lang === 'en' ? 'var(--primary)' : '#888';
@@ -1219,7 +1229,7 @@
           html += `
                         <div class="group-card" id="card-${bus.id}" style="margin-bottom: 0;">
                             <div class="group-header" onclick="toggleBusMore('${bus.id}')" style="cursor: pointer; padding: 10px; margin: -10px -10px 20px -10px; border-radius: 12px; transition: background 0.2s;" onmouseover="this.style.background='rgba(56,142,60,0.05)'" onmouseout="this.style.background='transparent'">
-                                <h3 style="margin: 0; color: var(--dark); font-size: 1.3rem;">${bus.name}</h3>
+                                <h3 style="margin: 0; color: var(--dark); font-size: 1.3rem;">${formatBusName(bus.name)}</h3>
                                 <span class="group-badge">${totalPeople} ${TRANSLATIONS[lang].people}</span>
                             </div>
                             <ul class="member-list">
@@ -1271,9 +1281,9 @@
       for (let [key, info] of directory.entries()) {
         const normalizedKey = removeAccents(key);
         const emailStr = info.email ? removeAccents(info.email.toLowerCase()) : '';
-        
+
         const isMatch = queryParts.every(part => normalizedKey.includes(part) || emailStr.includes(part));
-        
+
         if (isMatch) {
           matches.push({ key, info });
         }
@@ -1314,7 +1324,7 @@
         } else {
           let role = '';
           if (m.info.memberData.is_leader) {
-             role = lang === 'en' ? 'Bus Leader' : 'Trưởng xe';
+            role = lang === 'en' ? 'Bus Leader' : 'Trưởng xe';
           }
           subtext = role ? `<span class="search-dropdown-sub">${role}</span>` : '';
         }
@@ -1404,7 +1414,7 @@
         html += `
                     <div class="personal-section" style="max-height: 500px; overflow-y: auto;">
                         <h4>${TRANSLATIONS[lang].busInfo}</h4>
-                        <div class="highlight-info">${myBus.name}</div>
+                        <div class="highlight-info">${formatBusName(myBus.name)}</div>
                         <h5 style="margin: 15px 0 10px 0; color: #666;">${TRANSLATIONS[lang].busmates}</h5>
                         <ul class="member-list" style="gap: 5px;">
                             ${sortedBusMembers.map(m => renderMember(m, m.name === searchedName)).join('')}
@@ -1742,13 +1752,13 @@
           if (row['Người nhà']) {
             let familyDesc = row['Người nhà'].toString().trim();
             let familyLines = familyDesc.split(/\r?\n/);
-            
+
             familyLines.forEach(line => {
               let lineTrimmed = line.trim();
               if (lineTrimmed) {
                 const parts = lineTrimmed.split('-').map(s => s.trim());
                 const fmName = parts[0] || '';
-  
+
                 if (fmName) {
                   // Find the last employee added for this bus/room and attach the family member to them
                   if (busesMap.has(currentBus)) {

@@ -688,25 +688,109 @@
       position: fixed;
       bottom: 30px;
       right: 30px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: linear-gradient(135deg, #7000FF, #B800FF);
       color: white;
       border: none;
       border-radius: 30px;
       padding: 15px 25px;
       font-size: 1.1rem;
       font-weight: 800;
-      box-shadow: 0 10px 25px rgba(56, 142, 60, 0.4);
+      box-shadow: 0 10px 25px rgba(112, 0, 255, 0.4);
       cursor: pointer;
       z-index: 90;
       display: flex;
       align-items: center;
       gap: 10px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: fab-attention 6s infinite;
+    }
+
+    /* Pulsing Halo Effect behind the button */
+    .fab-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #7000FF, #B800FF);
+      z-index: -1;
+      opacity: 0.6;
+      animation: fab-pulse 2s infinite;
+      pointer-events: none;
     }
 
     .fab-btn:hover {
+      animation: none;
       transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 15px 35px rgba(56, 142, 60, 0.5);
+      box-shadow: 0 15px 35px rgba(112, 0, 255, 0.55);
+    }
+
+    .fab-btn:hover::before {
+      animation: none;
+      opacity: 0;
+    }
+
+    /* Red notification badge on the button */
+    .fab-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 12px;
+      height: 12px;
+      background-color: #FF3D00;
+      border: 2px solid white;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(255, 61, 0, 0.8);
+      animation: badge-glow 1.5s infinite alternate;
+    }
+
+    /* Pulsing halo keyframes */
+    @keyframes fab-pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+      100% {
+        transform: scale(1.15, 1.25);
+        opacity: 0;
+      }
+    }
+
+    /* Periodic attention-grabbing wiggle */
+    @keyframes fab-attention {
+      0%, 80%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      83% {
+        transform: translateY(-12px) scale(1.08);
+      }
+      86% {
+        transform: translateY(-8px) rotate(-5deg) scale(1.08);
+      }
+      89% {
+        transform: translateY(-12px) rotate(5deg) scale(1.08);
+      }
+      92% {
+        transform: translateY(-8px) rotate(-3deg) scale(1.08);
+      }
+      95% {
+        transform: translateY(-10px) rotate(3deg) scale(1.08);
+      }
+      98% {
+        transform: translateY(0) rotate(0deg) scale(1);
+      }
+    }
+
+    /* Badge glow keyframes */
+    @keyframes badge-glow {
+      from {
+        box-shadow: 0 0 4px rgba(255, 61, 0, 0.6);
+      }
+      to {
+        box-shadow: 0 0 12px rgba(255, 61, 0, 1), 0 0 20px rgba(255, 61, 0, 0.6);
+      }
     }
 
     /* Sidebar Styles */
@@ -989,6 +1073,7 @@
 
   <button class="fab-btn" onclick="openSidebar()">
     📖 <span id="fab-text">Guide Book</span>
+    <span class="fab-badge"></span>
   </button>
 
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
@@ -1450,6 +1535,12 @@
       document.getElementById('infoSidebar').classList.add('open');
       document.getElementById('sidebarOverlay').classList.add('active');
       document.body.style.overflow = 'hidden';
+      
+      // Hide the notification badge once the user opens the guide book
+      const badge = document.querySelector('.fab-badge');
+      if (badge) {
+        badge.style.display = 'none';
+      }
     }
 
     function closeSidebar() {

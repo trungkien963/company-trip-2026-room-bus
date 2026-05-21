@@ -2,3 +2,4 @@ node_modules/
 .DS_Store
 scratch*.js
 scratch*.py
+.vercel

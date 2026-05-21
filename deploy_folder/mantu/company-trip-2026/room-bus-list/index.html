@@ -1129,25 +1129,50 @@
 
     function initDirectory() {
       directory.clear();
+      let idCounter = 0;
+      const memberEntries = new Map();
+      const familyEntries = new Map();
+
       data.buses.forEach(bus => {
         busExpandedState[bus.id] = false;
         bus.members.forEach(member => {
-          let key = member.name.toLowerCase().replace(/\s+/g, ' ');
           let email = member.email ? member.email.toLowerCase().replace(/\s+/g, ' ') : "";
 
-          if (!directory.has(key)) {
-            directory.set(key, { memberData: member, bus: bus, room: null, email: email, type: 'employee', originalName: member.name });
-          }
-
-          if (email && !directory.has(email)) {
-            directory.set(email, { memberData: member, bus: bus, room: null, email: email, type: 'email', originalName: member.email });
+          if (!memberEntries.has(member)) {
+            const entryId = 'person-' + (++idCounter);
+            const entry = {
+              id: entryId,
+              memberData: member,
+              bus: bus,
+              room: null,
+              email: email,
+              type: 'employee',
+              originalName: member.name
+            };
+            directory.set(entryId, entry);
+            memberEntries.set(member, entry);
+          } else {
+            memberEntries.get(member).bus = bus;
           }
 
           if (member.family_members && member.family_members.length > 0) {
             member.family_members.forEach(fm => {
-              let fmKey = fm.toLowerCase().replace(/\s+/g, ' ');
-              if (!directory.has(fmKey)) {
-                directory.set(fmKey, { memberData: member, bus: bus, room: null, email: '', type: 'family', originalName: fm });
+              const familyKey = fm + '-' + member.name;
+              if (!familyEntries.has(familyKey)) {
+                const entryId = 'person-' + (++idCounter);
+                const entry = {
+                  id: entryId,
+                  memberData: member,
+                  bus: bus,
+                  room: null,
+                  email: '',
+                  type: 'family',
+                  originalName: fm
+                };
+                directory.set(entryId, entry);
+                familyEntries.set(familyKey, entry);
+              } else {
+                familyEntries.get(familyKey).bus = bus;
               }
             });
           }
@@ -1156,30 +1181,43 @@
 
       data.rooms.forEach(room => {
         room.members.forEach(member => {
-          let key = member.name.toLowerCase().replace(/\s+/g, ' ');
           let email = member.email ? member.email.toLowerCase().replace(/\s+/g, ' ') : "";
 
-          if (directory.has(key)) {
-            directory.get(key).room = room;
+          if (memberEntries.has(member)) {
+            memberEntries.get(member).room = room;
           } else {
-            directory.set(key, { memberData: member, bus: null, room: room, email: email, type: 'employee', originalName: member.name });
-          }
-
-          if (email) {
-            if (directory.has(email)) {
-              directory.get(email).room = room;
-            } else {
-              directory.set(email, { memberData: member, bus: null, room: room, email: email, type: 'email', originalName: member.email });
-            }
+            const entryId = 'person-' + (++idCounter);
+            const entry = {
+              id: entryId,
+              memberData: member,
+              bus: null,
+              room: room,
+              email: email,
+              type: 'employee',
+              originalName: member.name
+            };
+            directory.set(entryId, entry);
+            memberEntries.set(member, entry);
           }
 
           if (member.family_members && member.family_members.length > 0) {
             member.family_members.forEach(fm => {
-              let fmKey = fm.toLowerCase().replace(/\s+/g, ' ');
-              if (directory.has(fmKey)) {
-                directory.get(fmKey).room = room;
+              const familyKey = fm + '-' + member.name;
+              if (familyEntries.has(familyKey)) {
+                familyEntries.get(familyKey).room = room;
               } else {
-                directory.set(fmKey, { memberData: member, bus: null, room: room, email: '', type: 'family', originalName: fm });
+                const entryId = 'person-' + (++idCounter);
+                const entry = {
+                  id: entryId,
+                  memberData: member,
+                  bus: null,
+                  room: room,
+                  email: '',
+                  type: 'family',
+                  originalName: fm
+                };
+                directory.set(entryId, entry);
+                familyEntries.set(familyKey, entry);
               }
             });
           }
@@ -1256,7 +1294,7 @@
     }
 
 
-    function renderMember(member, highlight = false) {
+    function renderMember(member, highlight = false, highlightFamilyName = '') {
       const initials = getInitials(member.name);
       let roleName = '';
       if (member.is_leader) {
@@ -1275,9 +1313,18 @@
 
       let familyBlock = '';
       if (member.family_members && member.family_members.length > 0) {
-        let familyItems = member.family_members.map(fm => `
-                    <div style="font-weight: 600; color: #555; font-size: 0.9rem; padding: 4px 0;">👨‍👩‍👧 ${fm}</div>
-                `).join('');
+        let familyItems = member.family_members.map(fm => {
+          const isHighlighted = highlightFamilyName && fm.toLowerCase().replace(/\s+/g, ' ') === highlightFamilyName.toLowerCase().replace(/\s+/g, ' ');
+          if (isHighlighted) {
+            return `
+                        <div style="font-weight: 700; color: #1B5E20; font-size: 0.95rem; padding: 6px 12px; background: rgba(56, 142, 60, 0.15); border-radius: 8px; display: inline-block; margin: 4px 0; border-left: 3px solid #4CAF50;">👨‍👩‍👧 ${fm}</div>
+                    `;
+          } else {
+            return `
+                        <div style="font-weight: 600; color: #555; font-size: 0.9rem; padding: 4px 0;">👨‍👩‍👧 ${fm}</div>
+                    `;
+          }
+        }).join('');
 
         familyBlock = `
                     <div style="margin-top: 8px; padding: 6px 12px; background: rgba(255, 255, 255, 0.7); border-radius: 8px; border-left: 3px solid #81C784;">
@@ -1363,14 +1410,14 @@
 
       let matches = [];
       const queryParts = query.split(' ').filter(p => p.length > 0);
-      for (let [key, info] of directory.entries()) {
-        const normalizedKey = removeAccents(key);
-        const emailStr = info.email ? removeAccents(info.email.toLowerCase()) : '';
+      for (let [id, info] of directory.entries()) {
+        const normalizedName = removeAccents(info.originalName);
+        const emailStr = info.email ? removeAccents(info.email) : '';
 
-        const isMatch = queryParts.every(part => normalizedKey.includes(part) || emailStr.includes(part));
+        const isMatch = queryParts.every(part => normalizedName.includes(part) || emailStr.includes(part));
 
         if (isMatch) {
-          matches.push({ key, info });
+          matches.push({ key: id, info });
         }
       }
 
@@ -1384,34 +1431,25 @@
         return;
       }
 
-      // Deduplicate matches to show unique people
-      let uniqueMatchesMap = new Map();
-      matches.forEach(m => {
-        if (!uniqueMatchesMap.has(m.info.memberData.name)) {
-          uniqueMatchesMap.set(m.info.memberData.name, m);
-        } else if (m.info.type === 'family') {
-          // Always try to show the exact family member if they were directly matched
-          uniqueMatchesMap.set(m.info.memberData.name + '-' + m.info.originalName, m);
-        }
-      });
-      let uniqueMatches = Array.from(uniqueMatchesMap.values());
-
-      dropdown.innerHTML = uniqueMatches.map(m => {
+      dropdown.innerHTML = matches.map(m => {
         let display = m.info.originalName;
         let subtext = '';
         let avatarIcon = '👤';
         if (m.info.type === 'family') {
           avatarIcon = '👨‍👩‍👧';
-          subtext = `<span class="search-dropdown-sub">(Family of ${m.info.memberData.name})</span>`;
-        } else if (m.info.type === 'email') {
-          avatarIcon = '✉️';
-          subtext = `<span class="search-dropdown-sub">(${m.info.memberData.name})</span>`;
+          subtext = `<span class="search-dropdown-sub">(${lang === 'en' ? 'Family of' : 'Người nhà của'} ${m.info.memberData.name})</span>`;
         } else {
-          let role = '';
+          // Employee
+          let details = [];
           if (m.info.memberData.is_leader) {
-            role = lang === 'en' ? 'Bus Leader' : 'Trưởng xe';
+            details.push(lang === 'en' ? 'Bus Leader' : 'Trưởng xe');
           }
-          subtext = role ? `<span class="search-dropdown-sub">${role}</span>` : '';
+          if (m.info.email) {
+            details.push(m.info.email);
+          }
+          if (details.length > 0) {
+            subtext = `<span class="search-dropdown-sub">(${details.join(' - ')})</span>`;
+          }
         }
 
         // escape quotes for onclick
@@ -1440,6 +1478,11 @@
       const searchedName = match.memberData.name;
       const myBus = match.bus;
       const myRoom = match.room;
+
+      let searchedFamilyName = '';
+      if (match.type === 'family') {
+        searchedFamilyName = match.originalName;
+      }
 
       let displayName = (lang === 'vi' && match.memberData.name_vi) ? match.memberData.name_vi : match.memberData.name;
       let roleName = '';
@@ -1474,7 +1517,7 @@
                         <div class="highlight-info">${lang === 'en' ? myRoom.name : myRoom.name_vi}</div>
                         <h5 style="margin: 15px 0 10px 0; color: #666;">${TRANSLATIONS[lang].roommates}</h5>
                         <ul class="member-list" style="gap: 5px;">
-                            ${sortedRoomMembers.map(m => renderMember(m, m.name === searchedName)).join('')}
+                            ${sortedRoomMembers.map(m => renderMember(m, m.name === searchedName, searchedFamilyName)).join('')}
                         </ul>
                     </div>
                 `;
@@ -1502,7 +1545,7 @@
                         <div class="highlight-info">${formatBusName(myBus.name)}</div>
                         <h5 style="margin: 15px 0 10px 0; color: #666;">${TRANSLATIONS[lang].busmates}</h5>
                         <ul class="member-list" style="gap: 5px;">
-                            ${sortedBusMembers.map(m => renderMember(m, m.name === searchedName)).join('')}
+                            ${sortedBusMembers.map(m => renderMember(m, m.name === searchedName, searchedFamilyName)).join('')}
                         </ul>
                     </div>
                 `;

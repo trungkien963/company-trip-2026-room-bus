@@ -1854,6 +1854,7 @@
             currentEmail = row['Email'] ? row['Email'].toString().trim() : '';
             currentBus = row['Bus'] ? row['Bus'].toString().trim() : 'Unknown Bus';
             currentRoom = row['Room'] ? row['Room'].toString().trim() : 'Unknown Room';
+            const sheratonRoom = row['Sheraton - Room'] ? row['Sheraton - Room'].toString().trim() : '';
 
             // 1. Add the Employee themselves
             let isLeader = false;
@@ -1875,7 +1876,8 @@
 
             if (!busesMap.has(currentBus)) busesMap.set(currentBus, { id: 'bus-' + busesMap.size, name: currentBus, leader: null, members: [] });
             if (!roomsMap.has(currentRoom)) {
-              roomsMap.set(currentRoom, { id: 'room-' + roomsMap.size, name: `TBD`, name_vi: `Đang cập nhật`, members: [] });
+              const roomDisplay = sheratonRoom ? sheratonRoom : currentRoom;
+              roomsMap.set(currentRoom, { id: 'room-' + roomsMap.size, name: roomDisplay, name_vi: roomDisplay, members: [] });
             }
 
             busesMap.get(currentBus).members.push(employee);
